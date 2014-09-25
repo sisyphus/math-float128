@@ -1,7 +1,12 @@
 use ExtUtils::MakeMaker;
+use Config;
+
+$defines = $Config{byteorder} =~ /^1234/ ? "-DWE_HAVE_LENDIAN" : "-DWE_HAVE_BENDIAN";
+
 my %options = %{
 {
   'NAME' => 'Math::Float128',
+  'DEFINE' => $defines,
   'LIBS' => [
     '-lquadmath -lm'
   ],
