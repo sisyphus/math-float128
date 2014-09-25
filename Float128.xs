@@ -40,8 +40,8 @@ void flt128_set_prec(pTHX_ int x) {
     _DIGITS = x;
 }
 
-SV * flt128_get_prec(pTHX) {
-     return newSVuv(_DIGITS);
+int flt128_get_prec(void) {
+     return _DIGITS;
 }
 
 int _is_nan(float128 x) {
@@ -94,7 +94,7 @@ SV * InfF128(pTHX_ int sign) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in InfF128() function");
+     if(f == NULL) croak("Failed to allocate memory in InfF128 function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -111,7 +111,7 @@ SV * NaNF128(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in NaNF128 function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -128,7 +128,7 @@ SV * ZeroF128(pTHX_ int sign) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in ZeroF128() function");
+     if(f == NULL) croak("Failed to allocate memory in ZeroF128 function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -146,7 +146,7 @@ SV * UnityF128(pTHX_ int sign) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in UnityF128() function");
+     if(f == NULL) croak("Failed to allocate memory in UnityF128 function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -193,7 +193,7 @@ SV * STRtoF128(pTHX_ char * str) {
      char * ptr;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in STRtoF128() function");
+     if(f == NULL) croak("Failed to allocate memory in STRtoF128 function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -210,7 +210,7 @@ SV * NVtoF128(pTHX_ SV * nv) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NVtoF128() function");
+     if(f == NULL) croak("Failed to allocate memory in NVtoF128 function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -227,7 +227,7 @@ SV * IVtoF128(pTHX_ SV * iv) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in IVtoF128() function");
+     if(f == NULL) croak("Failed to allocate memory in IVtoF128 function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -244,7 +244,7 @@ SV * UVtoF128(pTHX_ SV * uv) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in UVtoF128() function");
+     if(f == NULL) croak("Failed to allocate memory in UVtoF128 function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -268,7 +268,7 @@ void F128toSTR(pTHX_ SV * f) {
           t = *(INT2PTR(float128 *, SvIV(SvRV(f))));
 
           Newx(buffer, 15 + _DIGITS, char);
-          if(buffer == NULL) croak("Failed to allocate memory in F128toSTR()");
+          if(buffer == NULL) croak("Failed to allocate memory in F128toSTR");
           quadmath_snprintf(buffer, 15 + _DIGITS, "%.*Qe", _DIGITS - 1, t);
           ST(0) = sv_2mortal(newSVpv(buffer, 0));
           Safefree(buffer);
@@ -293,7 +293,7 @@ void F128toSTRP(pTHX_ SV * f, int decimal_prec) {
           t = *(INT2PTR(float128 *, SvIV(SvRV(f))));
 
           Newx(buffer, 12 + decimal_prec, char);
-          if(buffer == NULL) croak("Failed to allocate memory in F128toSTRP()");
+          if(buffer == NULL) croak("Failed to allocate memory in F128toSTRP");
           quadmath_snprintf(buffer, 12 + decimal_prec, "%.*Qe", decimal_prec - 1, t);
           ST(0) = sv_2mortal(newSVpv(buffer, 0));
           Safefree(buffer);
@@ -338,7 +338,7 @@ SV * _overload_add(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(ld, 1, float128);
-     if(ld == NULL) croak("Failed to allocate memory in _overload_add() function");
+     if(ld == NULL) croak("Failed to allocate memory in _overload_add function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -363,7 +363,7 @@ SV * _overload_mul(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(ld, 1, float128);
-     if(ld == NULL) croak("Failed to allocate memory in _overload_mul() function");
+     if(ld == NULL) croak("Failed to allocate memory in _overload_mul function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -387,7 +387,7 @@ SV * _overload_sub(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(ld, 1, float128);
-     if(ld == NULL) croak("Failed to allocate memory in _overload_sub() function");
+     if(ld == NULL) croak("Failed to allocate memory in _overload_sub function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -420,7 +420,7 @@ SV * _overload_div(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(ld, 1, float128);
-     if(ld == NULL) croak("Failed to allocate memory in _overload_div() function");
+     if(ld == NULL) croak("Failed to allocate memory in _overload_div function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -617,7 +617,7 @@ SV * _overload_copy(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(ld, 1, float128);
-     if(ld == NULL) croak("Failed to allocate memory in _overload_copy() function");
+     if(ld == NULL) croak("Failed to allocate memory in _overload_copy function");
 
      *ld = *(INT2PTR(float128 *, SvIV(SvRV(a))));
 
@@ -637,7 +637,7 @@ SV * F128toF128(pTHX_ SV * a) {
        if(strEQ(h, "Math::Float128")) {
 
          Newx(f, 1, float128);
-         if(f == NULL) croak("Failed to allocate memory in F128toF128() function");
+         if(f == NULL) croak("Failed to allocate memory in F128toF128 function");
 
          *f = *(INT2PTR(float128 *, SvIV(SvRV(a))));
 
@@ -670,7 +670,7 @@ SV * _overload_abs(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in _overload_abs() function");
+     if(f == NULL) croak("Failed to allocate memory in _overload_abs function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -688,7 +688,7 @@ SV * _overload_int(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in _overload_int() function");
+     if(f == NULL) croak("Failed to allocate memory in _overload_int function");
 
      *f = *(INT2PTR(float128 *, SvIV(SvRV(a))));
 
@@ -708,7 +708,7 @@ SV * _overload_sqrt(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in _overload_sqrt() function");
+     if(f == NULL) croak("Failed to allocate memory in _overload_sqrt function");
 
      *f = sqrtq(*(INT2PTR(float128 *, SvIV(SvRV(a)))));
 
@@ -725,7 +725,7 @@ SV * _overload_log(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in _overload_log() function");
+     if(f == NULL) croak("Failed to allocate memory in _overload_log function");
 
      *f = logq(*(INT2PTR(float128 *, SvIV(SvRV(a)))));
 
@@ -743,7 +743,7 @@ SV * _overload_exp(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in _overload_exp() function");
+     if(f == NULL) croak("Failed to allocate memory in _overload_exp function");
 
 #ifdef __MINGW64_VERSION_MAJOR /* avoid calling expq() as it's buggy */
      *f = powq(M_Eq, *(INT2PTR(float128 *, SvIV(SvRV(a)))));
@@ -765,7 +765,7 @@ SV * _overload_sin(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in _overload_sin() function");
+     if(f == NULL) croak("Failed to allocate memory in _overload_sin function");
 
      *f = sinq(*(INT2PTR(float128 *, SvIV(SvRV(a)))));
 
@@ -783,7 +783,7 @@ SV * _overload_cos(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in _overload_cos() function");
+     if(f == NULL) croak("Failed to allocate memory in _overload_cos function");
 
      *f = cosq(*(INT2PTR(float128 *, SvIV(SvRV(a)))));
 
@@ -801,7 +801,7 @@ SV * _overload_atan2(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in _overload_atan2() function");
+     if(f == NULL) croak("Failed to allocate memory in _overload_atan2 function");
 
      *f = atan2q(*(INT2PTR(float128 *, SvIV(SvRV(a)))), *(INT2PTR(float128 *, SvIV(SvRV(b)))));
 
@@ -837,7 +837,7 @@ SV * _overload_pow(pTHX_ SV * a, SV * b, SV * third) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in _overload_pow() function");
+     if(f == NULL) croak("Failed to allocate memory in _overload_pow function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -905,7 +905,7 @@ SV * _FLT128_MAX(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _FLT128_MAX function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -924,7 +924,7 @@ SV * _FLT128_MIN(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _FLT128_MIN function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -943,7 +943,7 @@ SV * _FLT128_EPSILON(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _FLT128_EPSILON function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -963,7 +963,7 @@ SV * _FLT128_DENORM_MIN(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _FLT128_DENORM_MIN function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1015,7 +1015,7 @@ SV * _M_Eq(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_Eq function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1034,7 +1034,7 @@ SV * _M_LOG2Eq(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_LOG2Eq function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1053,7 +1053,7 @@ SV * _M_LOG10Eq(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_LOG10Eq function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1072,7 +1072,7 @@ SV * _M_LN2q(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_LN2q function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1091,7 +1091,7 @@ SV * _M_LN10q(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_LN10q function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1110,7 +1110,7 @@ SV * _M_PIq(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_PIq function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1129,7 +1129,7 @@ SV * _M_PI_2q(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_PI_2q function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1148,7 +1148,7 @@ SV * _M_PI_4q(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_PI_4q function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1167,7 +1167,7 @@ SV * _M_1_PIq(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_1_PIq function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1186,7 +1186,7 @@ SV * _M_2_PIq(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_2_PIq function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1205,7 +1205,7 @@ SV * _M_2_SQRTPIq(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_2_SQRTPIq function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1224,7 +1224,7 @@ SV * _M_SQRT2q(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_SQRT2q function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1243,7 +1243,7 @@ SV * _M_SQRT1_2q(pTHX) {
      SV * obj_ref, * obj;
 
      Newx(f, 1, float128);
-     if(f == NULL) croak("Failed to allocate memory in NaNF128() function");
+     if(f == NULL) croak("Failed to allocate memory in _M_SQRT1_2q function");
 
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
@@ -1255,9 +1255,37 @@ SV * _M_SQRT1_2q(pTHX) {
      return obj_ref;
 }
 
+void _f128_bytes(pTHX_ SV * sv) {
+  dXSARGS;
+  float128 f128 = *(INT2PTR(float128 *, SvIV(SvRV(sv))));
+  int i, n = sizeof(float128);
+  char * buff;
+  void * p = &f128;
+
+  Newx(buff, 4, char);
+  if(buff == NULL) croak("Failed to allocate memory in _f128_bytes function");
+
+  sp = mark;
+
+#ifdef WE_HAVE_BENDIAN
+  for (i = 0; i < n; i++) {
+#else
+  for (i = n - 1; i >= 0; i--) {
+#endif
+
+    sprintf(buff, "%02X", ((unsigned char*)p)[i]);
+    XPUSHs(sv_2mortal(newSVpv(buff, 0)));
+  }
+  PUTBACK;
+  Safefree(buff);
+  XSRETURN(n);
+}
 
 
-MODULE = Math::Float128	PACKAGE = Math::Float128
+
+
+
+MODULE = Math::Float128  PACKAGE = Math::Float128
 
 PROTOTYPES: DISABLE
 
@@ -1265,24 +1293,21 @@ PROTOTYPES: DISABLE
 void
 flt128_set_prec (x)
 	int	x
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	flt128_set_prec(aTHX_ x);
-	if (PL_markstack_ptr != temp) {
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        flt128_set_prec(aTHX_ x);
+        if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
         }
         /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
+        return; /* assume stack size is correct */
 
-SV *
+int
 flt128_get_prec ()
-CODE:
-  RETVAL = flt128_get_prec (aTHX);
-OUTPUT:  RETVAL
 
 
 SV *
@@ -1365,51 +1390,51 @@ OUTPUT:  RETVAL
 void
 F128toSTR (f)
 	SV *	f
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	F128toSTR(aTHX_ f);
-	if (PL_markstack_ptr != temp) {
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        F128toSTR(aTHX_ f);
+        if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
         }
         /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
+        return; /* assume stack size is correct */
 
 void
 F128toSTRP (f, decimal_prec)
 	SV *	f
 	int	decimal_prec
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	F128toSTRP(aTHX_ f, decimal_prec);
-	if (PL_markstack_ptr != temp) {
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        F128toSTRP(aTHX_ f, decimal_prec);
+        if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
         }
         /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
+        return; /* assume stack size is correct */
 
 void
 DESTROY (f)
 	SV *	f
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	DESTROY(aTHX_ f);
-	if (PL_markstack_ptr != temp) {
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        DESTROY(aTHX_ f);
+        if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
         }
         /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
+        return; /* assume stack size is correct */
 
 SV *
 _LDBL_DIG ()
@@ -1869,4 +1894,20 @@ CODE:
   RETVAL = _M_SQRT1_2q (aTHX);
 OUTPUT:  RETVAL
 
+
+void
+_f128_bytes (sv)
+	SV *	sv
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        _f128_bytes(aTHX_ sv);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
 
