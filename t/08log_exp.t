@@ -43,7 +43,8 @@ else {
   print "not ok 4\n";
 }
 
-if(cmp2NV($log, log(2.0))) {print "ok 5\n"}
+if(cmp2NV($log, log(2.0)) && $Config{nvtype} ne '__float128') {print "ok 5\n"}
+elsif(!cmp2NV($log, log(2.0)) && $Config{nvtype} eq '__float128') {print "ok 5\n"}
 else {
   warn "\n\$log: ", log($two), "\nlog(2.0): ", log(2.0), "\n";
   print "not ok 5\n";
@@ -55,7 +56,8 @@ else {
   print "not ok 6\n";
 }
 
-if(cmp2NV($exp_ld, $exp)) {print "ok 7\n"}
+if(cmp2NV($exp_ld, $exp) && $Config{nvtype} ne '__float128') {print "ok 7\n"}
+elsif(!cmp2NV($exp_ld, $exp) && $Config{nvtype} eq '__float128') {print "ok 7\n"}
 else {
   warn "\n\$exp_ld: $exp_ld\n\$exp: $exp\n";
   print "not ok 7\n";
