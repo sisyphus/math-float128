@@ -1,6 +1,7 @@
 use warnings;
 use strict;
 use Math::Float128 qw(:all);
+use Config;
 
 print "1..3\n";
 
@@ -17,19 +18,34 @@ my $sin_ldr = sin($ldr);
 my $cos_ldr = cos($ldr);
 my $atan2_ldr = atan2($ldr, $ldr2);
 
-if(approx($sin_ldr, $sin_r) && test_cmp($sin_ldr, $sin_r)) {print "ok 1\n"}
+if(approx($sin_ldr, $sin_r) && test_cmp($sin_ldr, $sin_r) && $Config{nvtype} ne '__float128') {
+  print "ok 1\n";
+}
+elsif(approx($sin_ldr, $sin_r) && !test_cmp($sin_ldr, $sin_r) && $Config{nvtype} eq '__float128') {
+  print "ok 1\n";
+}
 else {
   warn "\n\$sin_ldr: $sin_ldr\n\$sin_r: $sin_r\n";
   print "not ok 1\n";
 }
 
-if(approx($cos_ldr, $cos_r) && test_cmp($cos_ldr, $cos_r)) {print "ok 2\n"}
+if(approx($cos_ldr, $cos_r) && test_cmp($cos_ldr, $cos_r) && $Config{nvtype} ne '__float128') {
+  print "ok 2\n";
+}
+elsif(approx($cos_ldr, $cos_r) && !test_cmp($cos_ldr, $cos_r) && $Config{nvtype} eq '__float128') {
+  print "ok 2\n";
+}
 else {
   warn "\n\$cos_ldr: $cos_ldr\n\$cos_r: $cos_r\n";
   print "not ok 2\n";
 }
 
-if(approx($atan2_ldr, $atan2_r) && test_cmp($atan2_ldr, $atan2_r)) {print "ok 3\n"}
+if(approx($atan2_ldr, $atan2_r) && test_cmp($atan2_ldr, $atan2_r) && $Config{nvtype} ne '__float128') {
+  print "ok 3\n";
+}
+elsif(approx($atan2_ldr, $atan2_r) && !test_cmp($atan2_ldr, $atan2_r) && $Config{nvtype} eq '__float128') {
+  print "ok 3\n";
+}
 else {
   warn "\n\$atan2_ldr: $atan2_ldr\n\$atan2_r: $atan2_r\n";
   print "not ok 3\n";
