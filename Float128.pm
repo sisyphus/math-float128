@@ -59,7 +59,7 @@ DynaLoader::bootstrap Math::Float128 $Math::Float128::VERSION;
     M_Eq M_LOG2Eq M_LOG10Eq M_LN2q M_LN10q M_PIq M_PI_2q M_PI_4q M_1_PIq M_2_PIq
     M_2_SQRTPIq M_SQRT2q M_SQRT1_2q
     FLT128_MAX FLT128_MIN FLT128_EPSILON FLT128_DENORM_MIN
-    cmp2NV
+    cmp2NV f128_bytes
     );
 
 %Math::Float128::EXPORT_TAGS = (all => [qw(
@@ -70,7 +70,7 @@ DynaLoader::bootstrap Math::Float128 $Math::Float128::VERSION;
     M_Eq M_LOG2Eq M_LOG10Eq M_LN2q M_LN10q M_PIq M_PI_2q M_PI_4q M_1_PIq M_2_PIq
     M_2_SQRTPIq M_SQRT2q M_SQRT1_2q
     FLT128_MAX FLT128_MIN FLT128_EPSILON FLT128_DENORM_MIN
-    cmp2NV
+    cmp2NV f128_bytes
     )]);
 
 sub dl_load_flags {0} # Prevent DynaLoader from complaining and croaking
@@ -148,6 +148,12 @@ sub new {
     }
 
     die "Bad argument given to new";
+}
+
+
+sub f128_bytes {
+  my @ret = _f128_bytes($_[0]);
+  return join '', @ret;
 }
 
 sub FLT128_DIG        {return _FLT128_DIG()}
@@ -331,6 +337,10 @@ Math::Float128 - perl interface to C's __float128 operations
     If it is > $nv, returns 1.
     Otherwise returns 0.
 
+   $hex = f128_bytes($f);
+    Returns the hex representation of the _float128 value
+    as a string of 32 hex characters.
+
 =head1 BUGS
 
    The mingw64 compilers have a buggy expq() function; therefore the
@@ -342,7 +352,7 @@ Math::Float128 - perl interface to C's __float128 operations
 
    This program is free software; you may redistribute it and/or modify
    it under the same terms as Perl itself.
-   Copyright 2013 Sisyphus
+   Copyright 2013-14 Sisyphus
 
 
 =head1 AUTHOR
