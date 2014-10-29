@@ -3,6 +3,12 @@ use Config;
 
 $defines = $Config{byteorder} =~ /^1234/ ? "-DWE_HAVE_LENDIAN" : "-DWE_HAVE_BENDIAN";
 
+$defines .= " -DLONGLONG2IV_IS_OK"
+  if $Config{ivsize} >= $Config{longlongsize};
+
+$defines .= " -DLONG2IV_IS_OK"
+  if $Config{ivsize} >= $Config{longsize};
+
 my %options = %{
 {
   'NAME' => 'Math::Float128',
