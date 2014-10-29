@@ -1267,7 +1267,7 @@ void _f128_bytes(pTHX_ SV * sv) {
 
   sp = mark;
 
-#ifdef WE_HAVE_BENDIAN
+#ifdef WE_HAVE_BENDIAN /* Big Endian architecture */
   for (i = 0; i < n; i++) {
 #else
   for (i = n - 1; i >= 0; i--) {
@@ -1281,8 +1281,288 @@ void _f128_bytes(pTHX_ SV * sv) {
   XSRETURN(n);
 }
 
+void acos_F128(float128 * rop, float128 * op) {
+  *rop = acosq(*op);
+}
 
+void acosh_F128(float128 * rop, float128 * op) {
+  *rop = acoshq(*op);
+}
 
+void asin_F128(float128 * rop, float128 * op) {
+  *rop = asinq(*op);
+}
+
+void asinh_F128(float128 * rop, float128 * op) {
+  *rop = asinhq(*op);
+}
+
+void atan_F128(float128 * rop, float128 * op) {
+  *rop = atanq(*op);
+}
+
+void atanh_F128(float128 * rop, float128 * op) {
+  *rop = atanhq(*op);
+}
+
+void atan2_F128(float128 * rop, float128 * op1, float128 * op2) {
+  *rop = atan2q(*op1, *op2);
+}
+
+void cbrt_F128(float128 * rop, float128 * op) {
+  *rop = cbrtq(*op);
+}
+
+void ceil_F128(float128 * rop, float128 * op) {
+  *rop = ceilq(*op);
+}
+
+void copysign_F128(float128 * rop, float128 * op1, float128 * op2) {
+  *rop = copysignq(*op1, *op2);
+}
+
+void cosh_F128(float128 * rop, float128 * op) {
+  *rop = coshq(*op);
+}
+
+void cos_F128(float128 * rop, float128 * op) {
+  *rop = cosq(*op);
+}
+
+void erf_F128(float128 * rop, float128 * op) {
+  *rop = erfq(*op);
+}
+
+void erfc_F128(float128 * rop, float128 * op) {
+  *rop = erfcq(*op);
+}
+
+void exp_F128(float128 * rop, float128 * op) {
+  *rop = expq(*op);
+}
+
+void expm1_F128(float128 * rop, float128 * op) {
+  *rop = expm1q(*op);
+}
+
+void fabs_F128(float128 * rop, float128 * op) {
+  *rop = fabsq(*op);
+}
+
+void fdim_F128(float128 * rop, float128 * op1, float128 * op2) {
+  *rop = fdimq(*op1, *op2);
+}
+
+int finite_F128(float128 * op) {
+  return finiteq(*op);
+}
+
+void floor_F128(float128 * rop, float128 * op) {
+  *rop = floorq(*op);
+}
+
+void fma_F128(float128 * rop, float128 * op1, float128 * op2, float * op3) {
+  *rop = fmaq(*op1, *op2, *op3);
+}
+
+void fmax_F128(float128 * rop, float128 * op1, float128 * op2) {
+  *rop = fmaxq(*op1, *op2);
+}
+
+void fmin_F128(float128 * rop, float128 * op1, float128 * op2) {
+  *rop = fminq(*op1, *op2);
+}
+
+void fmod_F128(float128 * rop, float128 * op1, float128 * op2) {
+  *rop = fmodq(*op1, *op2);
+}
+
+void hypot_F128(float128 * rop, float128 * op1, float128 * op2) {
+  *rop = hypotq(*op1, *op2);
+}
+
+void frexp_F128(pTHX_ float128 * frac, SV * exp, float128 * op) {
+  int e;
+  *frac = frexpq(*op, &e);
+  sv_setsv(exp, newSViv(e));
+}
+
+void ldexp_F128(float128 * rop, float128 * op, int pow) {
+  *rop = ldexpq(*op, pow);
+}
+
+int isinf_F128(float128 * op) {
+  return isinfq(*op);
+}
+
+int ilogb_F128(float128 * op) {
+  return ilogbq(*op);
+}
+
+int isnan_F128(float128 * op) {
+  return isnanq(*op);
+}
+
+void j0_F128(float128 * rop, float128 * op) {
+  *rop = j0q(*op);
+}
+
+void j1_F128(float128 * rop, float128 * op) {
+  *rop = j1q(*op);
+}
+
+void jn_F128(float128 * rop, int n, float128 * op) {
+  *rop = jnq(n, *op);
+}
+
+void lgamma_F128(float128 * rop, float128 * op) {
+  *rop = lgammaq(*op);
+}
+
+SV * llrint_F128(pTHX_ float128 * op) {
+#ifdef LONGLONG2IV_IS_OK
+  return newSViv((IV)llrintq(*op));
+#else
+  warn("llrint_F128 not implemented: IV size (%d) is smaller than longlong size (%d)\n", sizeof(IV), sizeof(long long int));
+  croak("Use lrint_F128 instead");
+#endif
+}
+
+SV * llround_F128(pTHX_ float128 * op) {
+#ifdef LONGLONG2IV_IS_OK
+  return newSViv((IV)llroundq(*op));
+#else
+  warn("llround_F128 not implemented: IV size (%d) is smaller than longlong size (%d)\n", sizeof(IV), sizeof(long long int));
+  croak("Use lround_F128 instead");
+#endif
+}
+
+SV * lrint_F128(pTHX_ float128 * op) {
+#ifdef LONG2IV_IS_OK
+  return newSViv((IV)lrintq(*op));
+#else
+  croak("lrint_F128 not implemented: IV size (%d) is smaller than long size (%d)", sizeof(IV), sizeof(long));
+#endif
+}
+
+SV * lround_F128(pTHX_ float128 * op) {
+#ifdef LONG2IV_IS_OK
+  return newSViv((IV)lroundq(*op));
+#else
+  croak("lround_F128 not implemented: IV size (%d) is smaller than long size (%d)", sizeof(IV), sizeof(long));
+#endif
+}
+
+void log_F128(float128 * rop, float128 * op) {
+  *rop = logq(*op);
+}
+
+void log10_F128(float128 * rop, float128 * op) {
+  *rop = log10q(*op);
+}
+
+void log2_F128(float128 * rop, float128 * op) {
+  *rop = log2q(*op);
+}
+
+void log1p_F128(float128 * rop, float128 * op) {
+  *rop = log1pq(*op);
+}
+
+void modf_F128(float128 * frac, float128 * exp, float128 * op) {
+  float128 ret;
+  *frac = modfq(*op, &ret);
+  *exp = ret;
+}
+
+void nan_F128(pTHX_ float128 * rop, SV * op) {
+  *rop = nanq(SvPV_nolen(op));
+}
+
+void nearbyint_F128(float128 * rop, float128 * op) {
+  *rop = nearbyintq(*op);
+}
+
+void nextafter_F128(float128 * rop, float128 * op1, float128 * op2) {
+  *rop = nextafterq(*op1, *op2);
+}
+
+void pow_F128(float128 * rop, float128 * op1, float128 * op2) {
+  *rop = powq(*op1, *op2);
+}
+
+void remainder_F128(float128 * rop, float128 * op1, float128 * op2) {
+  *rop = remainderq(*op1, *op2);
+}
+
+void remquo_F128(pTHX_ float128 * rop1, SV * rop2, float128 * op1, float128 * op2) {
+  int ret;
+  *rop1 = remquoq(*op1, *op2, &ret);
+  sv_setsv(rop2, newSViv(ret));
+}
+
+void rint_F128(float128 * rop, float128 * op) {
+  *rop = rintq(*op);
+}
+
+void round_F128(float128 * rop, float128 * op) {
+  *rop = roundq(*op);
+}
+
+void scalbln_F128(float128 * rop, float128 * op1, long op2) {
+  *rop = scalblnq(*op1, op2);
+}
+
+void scalbn_F128(float128 * rop, float128 * op1, int op2) {
+  *rop = scalbnq(*op1, op2);
+}
+
+int signbit_F128(float128 * op) {
+  return signbitq(*op);
+}
+
+void sincos_F128(float128 * rop, float128 * sin, float128 * cos) {
+  float128 sine, cosine;
+  sincosq(*rop, &sine, &cosine);
+  *sin = sine;
+  *cos = cosine;
+}
+
+void sinh_F128(float128 * rop, float128 * op) {
+  *rop = sinhq(*op);
+}
+
+void sin_F128(float128 * rop, float128 * op) {
+  *rop = sinq(*op);
+}
+
+void sqrt_F128(float128 * rop, float128 * op) {
+  *rop = sqrtq(*op);
+}
+
+void tan_F128(float128 * rop, float128 * op) {
+  *rop = tanq(*op);
+}
+
+void tgamma_F128(float128 * rop, float128 * op) {
+  *rop = tgammaq(*op);
+}
+
+void trunc_F128(float128 * rop, float128 * op) {
+  *rop = truncq(*op);
+}
+
+void y0_F128(float128 * rop, float128 * op) {
+  *rop = y0q(*op);
+}
+
+void y1_F128(float128 * rop, float128 * op) {
+  *rop = y1q(*op);
+}
+
+void yn_F128(float128 * rop, int n, float128 * op) {
+  *rop = ynq(n, *op);
+}
 
 
 MODULE = Math::Float128  PACKAGE = Math::Float128
@@ -1903,6 +2183,992 @@ _f128_bytes (sv)
         PPCODE:
         temp = PL_markstack_ptr++;
         _f128_bytes(aTHX_ sv);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+acos_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        acos_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+acosh_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        acosh_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+asin_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        asin_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+asinh_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        asinh_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+atan_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        atan_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+atanh_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        atanh_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+atan2_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        atan2_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+cbrt_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        cbrt_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+ceil_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        ceil_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+copysign_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        copysign_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+cosh_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        cosh_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+cos_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        cos_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+erf_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        erf_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+erfc_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        erfc_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+exp_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        exp_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+expm1_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        expm1_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+fabs_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        fabs_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+fdim_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        fdim_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+int
+finite_F128 (op)
+	float128 *	op
+
+void
+floor_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        floor_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+fmax_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        fmax_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+fmin_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        fmin_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+fmod_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        fmod_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+hypot_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        hypot_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+frexp_F128 (frac, exp, op)
+	float128 *	frac
+	SV *	exp
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        frexp_F128(aTHX_ frac, exp, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+ldexp_F128 (rop, op, pow)
+	float128 *	rop
+	float128 *	op
+	int	pow
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        ldexp_F128(rop, op, pow);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+int
+isinf_F128 (op)
+	float128 *	op
+
+int
+ilogb_F128 (op)
+	float128 *	op
+
+int
+isnan_F128 (op)
+	float128 *	op
+
+void
+j0_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        j0_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+j1_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        j1_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+jn_F128 (rop, n, op)
+	float128 *	rop
+	int	n
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        jn_F128(rop, n, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+lgamma_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        lgamma_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+SV *
+llrint_F128 (op)
+	float128 *	op
+CODE:
+  RETVAL = llrint_F128 (aTHX_ op);
+OUTPUT:  RETVAL
+
+SV *
+llround_F128 (op)
+	float128 *	op
+CODE:
+  RETVAL = llround_F128 (aTHX_ op);
+OUTPUT:  RETVAL
+
+SV *
+lrint_F128 (op)
+	float128 *	op
+CODE:
+  RETVAL = lrint_F128 (aTHX_ op);
+OUTPUT:  RETVAL
+
+SV *
+lround_F128 (op)
+	float128 *	op
+CODE:
+  RETVAL = lround_F128 (aTHX_ op);
+OUTPUT:  RETVAL
+
+void
+log_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        log_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+log10_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        log10_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+log2_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        log2_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+log1p_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        log1p_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+modf_F128 (frac, exp, op)
+	float128 *	frac
+	float128 *	exp
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        modf_F128(frac, exp, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+nan_F128 (rop, op)
+	float128 *	rop
+	SV *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        nan_F128(aTHX_ rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+nearbyint_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        nearbyint_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+nextafter_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        nextafter_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+pow_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        pow_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+remainder_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        remainder_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+remquo_F128 (rop1, rop2, op1, op2)
+	float128 *	rop1
+	SV *	rop2
+	float128 *	op1
+	float128 *	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        remquo_F128(aTHX_ rop1, rop2, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+rint_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        rint_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+round_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        round_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+scalbln_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	long	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        scalbln_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+scalbn_F128 (rop, op1, op2)
+	float128 *	rop
+	float128 *	op1
+	int	op2
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        scalbn_F128(rop, op1, op2);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+int
+signbit_F128 (op)
+	float128 *	op
+
+void
+sincos_F128 (rop, sin, cos)
+	float128 *	rop
+	float128 *	sin
+	float128 *	cos
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        sincos_F128(rop, sin, cos);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+sinh_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        sinh_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+sin_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        sin_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+sqrt_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        sqrt_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+tan_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        tan_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+tgamma_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        tgamma_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+trunc_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        trunc_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+y0_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        y0_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+y1_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        y1_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+yn_F128 (rop, n, op)
+	float128 *	rop
+	int	n
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        yn_F128(rop, n, op);
         if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
           PL_markstack_ptr = temp;
