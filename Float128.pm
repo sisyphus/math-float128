@@ -60,6 +60,14 @@ DynaLoader::bootstrap Math::Float128 $Math::Float128::VERSION;
     M_2_SQRTPIq M_SQRT2q M_SQRT1_2q
     FLT128_MAX FLT128_MIN FLT128_EPSILON FLT128_DENORM_MIN
     cmp2NV f128_bytes
+    acos_F128 acosh_F128 asin_F128 asinh_F128 atan_F128 atanh_F128 atan2_F128 cbrt_F128 ceil_F128
+    copysign_F128 cosh_F128 cos_F128 erf_F128 erfc_F128 exp_F128 expm1_F128 fabs_F128 fdim_F128
+    finite_F128 floor_F128 fma_F128 fmax_F128 fmin_F128 fmod_F128 frexp_F128 hypot_F128 isinf_F128
+    ilogb_F128 isnan_F128 j0_F128 j1_F128 jn_F128 ldexp_F128 lgamma_F128 llrint_F128 llround_F128
+    log_F128 log10_F128 log2_F128 log1p_F128 lrint_F128 lround_F128 modf_F128 nan_F128
+    nearbyint_F128 nextafter_F128 pow_F128 remainder_F128 remquo_F128 rint_F128 round_F128
+    scalbln_F128 scalbn_F128 signbit_F128 sincos_F128 sinh_F128 sin_F128 sqrt_F128 tan_F128
+    tanh_F128 tgamma_F128 trunc_F128 y0_F128 y1_F128 yn_F128
     );
 
 %Math::Float128::EXPORT_TAGS = (all => [qw(
@@ -71,6 +79,14 @@ DynaLoader::bootstrap Math::Float128 $Math::Float128::VERSION;
     M_2_SQRTPIq M_SQRT2q M_SQRT1_2q
     FLT128_MAX FLT128_MIN FLT128_EPSILON FLT128_DENORM_MIN
     cmp2NV f128_bytes
+    acos_F128 acosh_F128 asin_F128 asinh_F128 atan_F128 atanh_F128 atan2_F128 cbrt_F128 ceil_F128
+    copysign_F128 cosh_F128 cos_F128 erf_F128 erfc_F128 exp_F128 expm1_F128 fabs_F128 fdim_F128
+    finite_F128 floor_F128 fma_F128 fmax_F128 fmin_F128 fmod_F128 frexp_F128 hypot_F128 isinf_F128
+    ilogb_F128 isnan_F128 j0_F128 j1_F128 jn_F128 ldexp_F128 lgamma_F128 llrint_F128 llround_F128
+    log_F128 log10_F128 log2_F128 log1p_F128 lrint_F128 lround_F128 modf_F128 nan_F128
+    nearbyint_F128 nextafter_F128 pow_F128 remainder_F128 remquo_F128 rint_F128 round_F128
+    scalbln_F128 scalbn_F128 signbit_F128 sincos_F128 sinh_F128 sin_F128 sqrt_F128 tan_F128
+    tanh_F128 tgamma_F128 trunc_F128 y0_F128 y1_F128 yn_F128
     )]);
 
 sub dl_load_flags {0} # Prevent DynaLoader from complaining and croaking
