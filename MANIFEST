@@ -4,6 +4,7 @@ Changes
 Float128.pm
 Float128.xs
 Makefile.PL
+typemap
 t/01load.t
 t/02abs.t
 t/03arith.t
