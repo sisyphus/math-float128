@@ -1544,6 +1544,10 @@ void tan_F128(float128 * rop, float128 * op) {
   *rop = tanq(*op);
 }
 
+void tanh_F128(float128 * rop, float128 * op) {
+  *rop = tanhq(*op);
+}
+
 void tgamma_F128(float128 * rop, float128 * op) {
   *rop = tgammaq(*op);
 }
@@ -3083,6 +3087,23 @@ tan_F128 (rop, op)
         PPCODE:
         temp = PL_markstack_ptr++;
         tan_F128(rop, op);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+tanh_F128 (rop, op)
+	float128 *	rop
+	float128 *	op
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        tanh_F128(rop, op);
         if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
           PL_markstack_ptr = temp;
