@@ -1521,9 +1521,9 @@ int signbit_F128(float128 * op) {
   return signbitq(*op);
 }
 
-void sincos_F128(float128 * rop, float128 * sin, float128 * cos) {
+void sincos_F128(float128 * sin, float128 * cos, float128 * op) {
   float128 sine, cosine;
-  sincosq(*rop, &sine, &cosine);
+  sincosq(*op, &sine, &cosine);
   *sin = sine;
   *cos = cosine;
 }
@@ -3062,15 +3062,15 @@ signbit_F128 (op)
 	float128 *	op
 
 void
-sincos_F128 (rop, sin, cos)
-	float128 *	rop
+sincos_F128 (sin, cos, op)
 	float128 *	sin
 	float128 *	cos
+	float128 *	op
         PREINIT:
         I32* temp;
         PPCODE:
         temp = PL_markstack_ptr++;
-        sincos_F128(rop, sin, cos);
+        sincos_F128(sin, cos, op);
         if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
           PL_markstack_ptr = temp;
