@@ -1361,7 +1361,7 @@ void floor_F128(float128 * rop, float128 * op) {
   *rop = floorq(*op);
 }
 
-void fma_F128(float128 * rop, float128 * op1, float128 * op2, float * op3) {
+void fma_F128(float128 * rop, float128 * op1, float128 * op2, float128 * op3) {
   *rop = fmaq(*op1, *op2, *op3);
 }
 
@@ -1469,10 +1469,10 @@ void log1p_F128(float128 * rop, float128 * op) {
   *rop = log1pq(*op);
 }
 
-void modf_F128(float128 * frac, float128 * exp, float128 * op) {
+void modf_F128(float128 * integer, float128 * frac, float128 * op) {
   float128 ret;
   *frac = modfq(*op, &ret);
-  *exp = ret;
+  *integer = ret;
 }
 
 void nan_F128(pTHX_ float128 * rop, SV * op) {
@@ -1567,6 +1567,39 @@ void y1_F128(float128 * rop, float128 * op) {
 void yn_F128(float128 * rop, int n, float128 * op) {
   *rop = ynq(n, *op);
 }
+
+int _longlong2iv_is_ok(void) {
+
+/* Is longlong to IV conversion guaranteed to not lose precision ? */
+#ifdef LONGLONG2IV_IS_OK
+  return 1;
+#else
+  return 0;
+#endif
+
+}
+
+/* Is long to IV conversion guaranteed to not lose precision ? */
+int _long2iv_is_ok(void) {
+
+#ifdef LONG2IV_IS_OK
+  return 1;
+#else
+  return 0;
+#endif
+
+}
+
+/* FLT_RADIX is probably 2, but we can use this if we need to be sure. */
+int _flt_radix(void) {
+  return (int)FLT_RADIX;
+}
+
+
+
+
+
+
 
 
 MODULE = Math::Float128  PACKAGE = Math::Float128
@@ -2526,6 +2559,25 @@ floor_F128 (rop, op)
         return; /* assume stack size is correct */
 
 void
+fma_F128 (rop, op1, op2, op3)
+	float128 *	rop
+	float128 *	op1
+	float128 *	op2
+	float128 *	op3
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        fma_F128(rop, op1, op2, op3);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
 fmax_F128 (rop, op1, op2)
 	float128 *	rop
 	float128 *	op1
@@ -2811,15 +2863,15 @@ log1p_F128 (rop, op)
         return; /* assume stack size is correct */
 
 void
-modf_F128 (frac, exp, op)
+modf_F128 (integer, frac, op)
+	float128 *	integer
 	float128 *	frac
-	float128 *	exp
 	float128 *	op
         PREINIT:
         I32* temp;
         PPCODE:
         temp = PL_markstack_ptr++;
-        modf_F128(frac, exp, op);
+        modf_F128(integer, frac, op);
         if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
           PL_markstack_ptr = temp;
@@ -3197,4 +3249,16 @@ yn_F128 (rop, n, op)
         }
         /* must have used dXSARGS; list context implied */
         return; /* assume stack size is correct */
+
+int
+_longlong2iv_is_ok ()
+
+
+int
+_long2iv_is_ok ()
+
+
+int
+_flt_radix ()
+
 
