@@ -332,71 +332,230 @@ Math::Float128 - perl interface to C's __float128 operations
 
 =head1 MATH LIBRARY FUNCTIONS
 
+   With the following functions, "$rop" and "$op" are Math::Float128
+   objects, and "$iv" is just a normal perl scalar that either 
+   holds a signed integer value, or to which a signed integer value
+   will be returned.
+   These are just interfaces to the standard math library functions.
+   I'm assuming you already have access to their documentation.
+
    acos_F128($rop, $op);
+    acos($op) is assigned to $rop.
+
    acosh_F128($rop, $op);
+    acosh($op) is assigned to $rop.
+
    asin_F128($rop, $op);
+    asin($op) is assigned to $rop.
+
    asinh_F128($rop, $op);
+    asinh($op) is assigned to $rop.
+
    atan_F128($rop, $op);
+    atan($op) is assigned to $rop.
+
    atanh_F128($rop, $op);
+    atanh($op) is assigned to $rop.
+
    atan2_F128($rop, $op1, $op2);
+    atan2($op1, $op2) is assigned to $rop.
+
    cbrt_F128($rop, $op);
+    cbrt($op) is assigned to $rop.
+
    ceil_F128($rop, $op);
+    ceil($op) is assigned to $rop.
+
    copysign_F128($rop, $op1, $op2);
+    copysign($op1, $op2) is assigned to $rop.
+
    cosh_F128($rop, $op);
+    cosh($op) is assigned to $rop.
+
    cos_F128($rop, $op);
+    cos($op) is assigned to $rop.
+
    erf_F128($rop, $op);
+    erf($op) is assigned to $rop.
+
    erfc_F128($rop, $op);
+    erfc($op) is assigned to $rop.
+
    exp_F128($rop, $op);
+    exp($op) is assigned to $rop.
+
    expm1_F128($rop, $op);
+    expm1($op) is assigned to $rop.
+
    fabs_F128($rop, $op);
+    fabs($op) is assigned to $rop.
+
    fdim_F128($rop, $op1, $op2);
+    fdim($op1, $op2) is assigned to $rop.
+
    $iv = finite_F128($op);
+    finite($op) is assigned to $iv.
+
    floor_F128($rop, $op);
+    floor($op) is assigned to $rop.
+
    fma_F128($rop, $op1, $op2, $op3);
+    fma($op1, $op2, $op3) is assigned to $rop.
+
    fmax_F128($rop, $op1, $op2);
+    fmax($op1, $op2) is assigned to $rop.
+
    fmin_F128($rop, $op1, $op2);
+    fmin($op1, $op2) is assigned to $rop.
+
    fmod_F128($rop, $op1, $op2);
+    fmod($op1, $op2) is assigned to $rop.
+
    frexp_F128($rop, $iv, $op);
+    frexp($op) is assigned to ($rop, $iv)
+
    hypot_F128($rop, $op1, $op2);
+    hypot($op1, $op2) is assigned to $rop.
+
    $iv = isinf_F128($op);
+    isinf($op) is assigned to $iv.
+
    $iv = ilogb_F128($op);
-   $iv = isnan_F128($rop, $op);
+    ilogb($op) is assigned to $iv.
+
+   $iv = isnan_F128($op);
+    isnan($op) is assigned to $iv.
+
    j0_F128($rop, $op);
+    j0($op) is assigned to $rop.
+
    j1_F128($rop, $op);
-   jn_F128($rop, $op);
+    j1($op) is assigned to $rop.
+
+   jn_F128($rop, $iv, $op);
+    jn($iv, $op) is assigned to $rop.
+    $iv should not contain a value that won't fit into a signed int.
+
    ldexp_F128($rop, $op, $iv);
+    ldexp($op, $iv) is assigned to $rop.
+    $iv should not contain a value that won't fit into a signed int
+
    lgamma_F128($rop, $op);
+    lgamma($op) is assigned to $rop.
+
    $iv = llrint_F128($op);
+    llrint($op) is assigned to $iv.
+    This requires that perl's IV is large enough to hold a longlong
+    int. Otherwise attempts to use this function will result in a fatal
+    error, accompanied by a message stating that the function is
+    unimplemented.
+
    $iv = llround_F128($op);
+    llround($op) is assigned to $rop.
+    This requires that perl's IV is large enough to hold a longlong
+    int. Otherwise attempts to use this function will result in a fatal
+    error, accompanied by a message stating that the function is
+    unimplemented.
+
    log_F128($rop, $op);
+    log($op) is assigned to $rop. # base e
+
    log10_F128($rop, $op);
+    log($op) is assigned to $rop. # base 10
+
    log2_F128($rop, $op);
+    log($op) is assigned to $rop. # base 2
+
    log1p_F128($rop, $op);
+    log1p($op) is assigned to $rop. # base e
+
    $iv = lrint_F128($op);
+    lrint($op) is assigned to $iv.
+    This requires that perl's IV is large enough to hold a long int.
+    Otherwise attempts to use this function will result in a fatal
+    error, accompanied by a message stating that the function is
+    unimplemented.
+
    $iv = lround_F128($op);
+    lround($op) is assigned to $iv
+    This requires that perl's IV is large enough to hold a long int.
+    Otherwise attempts to use this function will result in a fatal
+    error, accompanied by a message stating that the function is
+    unimplemented.
+
    modf_F128($rop1, $rop2, $op);
+    modf($op) is assigned to ($rop1, $rop2).
+
    nan_F128($rop, $op);
+    nan($op) is assigned to $rop.
+
    nearbyint_F128($rop, $op);
+    nearbyint($op) is assigned to $rop.
+
    nextafter_F128($rop, $op1, $op2);
+    nextafter($op1, $op2) is assigned to $rop.
+
    pow_F128($rop, $op1, $op2);
+    pow($op1, $op2) is assigned to $rop.
+
    remainder_F128($rop, $op1, $op2);
+    remainder($op1, $op2) is assigned to $rop.
+
    remquo_F128($rop1, $rop2, $op1, $op2);
+    remquo($op1, $op2) is assigned to ($rop1, $rop2).
+
    $iv = rint_F128($op);
+    rint($op) is assigned to $rop.
+
    $iv = round_F128($op);
+    round($op) is assigned to $iv.
+
    scalbln_F128($rop, $op, $iv);
+    scalbln($op, $iv) is assigned to $rop.
+    $iv should not contain a value that won't fit into a signed
+    long int.
+
    scalbn_F128($rop, $op, $iv);
+    scalbn($op, $iv) is assigned to $rop.
+    $iv should not contain a value that won't fir into a signed int.
+
    $iv = signbit_F128($op);
+    signbit($op) is assigned to $iv.
+
    sincos_F128($rop1, $rop2, $op);
+    sin($op) is assigned to $rop1.
+    cos($op) is assigned to $rop2.
+
    sinh_F128($rop, $op);
+    sinh($op) is assigned to $rop.
+
    sin_F128($rop, $op);
+    sin($op) is assigned to $rop.
+
    sqrt_F128($rop, $op);
+    sqrt($op) is assigned to $rop.
+
    tan_F128($rop, $op);
+    tan($op) is assigned to $rop.
+
    tanh_F128($rop, $op);
+    tanh($op) is assigned to $rop.
+
    tgamma_F128($rop, $op);
+    gamma($op) is assigned to $rop.
+
    trunc_F128($rop, $op);
+    trunc($op) is assigned to $rop.
+
    y0_F128($rop, $op);
+    y0($op) is assigned to $rop.
+
    y1_F128($rop, $op);
-   yn_F128 ($rop, $op);
+    y1($op) is assigned to $rop.
+
+   yn_F128 ($rop, $iv, $op);
+    yn($iv, $op) is assigned to $rop.
+    $iv should not contain a value that won't fit into a signed int.
 
 
 =head1 OTHER FUNCTIONS
