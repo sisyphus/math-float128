@@ -20,3 +20,4 @@ t/11stringification.t
 t/12trig.t
 t/13constants.t
 t/14f128_bytes.t
+t/15special.t
