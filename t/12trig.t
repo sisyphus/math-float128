@@ -46,7 +46,7 @@ else {
   print "not ok 3\n";
 }
 
-sincos_F128($ldr, $check, $check1);
+sincos_F128($check, $check1, $ldr);
 if($check1 == $cos_ldr) {print "ok 4\n"}
 else {
   warn "\nExpected $cos_ldr\nGot $check1\n";
