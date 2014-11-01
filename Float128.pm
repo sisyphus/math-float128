@@ -330,6 +330,74 @@ Math::Float128 - perl interface to C's __float128 operations
     Same as F128toSTR, but takes an additional arg that specifies the
     precision (in decimal digits) of the stringified return value.
 
+=head1 MATH LIBRARY FUNCTIONS
+
+   acos_F128($rop, $op);
+   acosh_F128($rop, $op);
+   asin_F128($rop, $op);
+   asinh_F128($rop, $op);
+   atan_F128($rop, $op);
+   atanh_F128($rop, $op);
+   atan2_F128($rop, $op1, $op2);
+   cbrt_F128($rop, $op);
+   ceil_F128($rop, $op);
+   copysign_F128($rop, $op1, $op2);
+   cosh_F128($rop, $op);
+   cos_F128($rop, $op);
+   erf_F128($rop, $op);
+   erfc_F128($rop, $op);
+   exp_F128($rop, $op);
+   expm1_F128($rop, $op);
+   fabs_F128($rop, $op);
+   fdim_F128($rop, $op1, $op2);
+   $iv = finite_F128($op);
+   floor_F128($rop, $op);
+   fma_F128($rop, $op1, $op2, $op3);
+   fmax_F128($rop, $op1, $op2);
+   fmin_F128($rop, $op1, $op2);
+   fmod_F128($rop, $op1, $op2);
+   frexp_F128($rop, $iv, $op);
+   hypot_F128($rop, $op1, $op2);
+   $iv = isinf_F128($op);
+   $iv = ilogb_F128($op);
+   $iv = isnan_F128($rop, $op);
+   j0_F128($rop, $op);
+   j1_F128($rop, $op);
+   jn_F128($rop, $op);
+   ldexp_F128($rop, $op, $iv);
+   lgamma_F128($rop, $op);
+   $iv = llrint_F128($op);
+   $iv = llround_F128($op);
+   log_F128($rop, $op);
+   log10_F128($rop, $op);
+   log2_F128($rop, $op);
+   log1p_F128($rop, $op);
+   $iv = lrint_F128($op);
+   $iv = lround_F128($op);
+   modf_F128($rop1, $rop2, $op);
+   nan_F128($rop, $op);
+   nearbyint_F128($rop, $op);
+   nextafter_F128($rop, $op1, $op2);
+   pow_F128($rop, $op1, $op2);
+   remainder_F128($rop, $op1, $op2);
+   remquo_F128($rop1, $rop2, $op1, $op2);
+   $iv = rint_F128($op);
+   $iv = round_F128($op);
+   scalbln_F128($rop, $op, $iv);
+   scalbn_F128($rop, $op, $iv);
+   $iv = signbit_F128($op);
+   sincos_F128($rop1, $rop2, $op);
+   sinh_F128($rop, $op);
+   sin_F128($rop, $op);
+   sqrt_F128($rop, $op);
+   tan_F128($rop, $op);
+   tanh_F128($rop, $op);
+   tgamma_F128($rop, $op);
+   trunc_F128($rop, $op);
+   y0_F128($rop, $op);
+   y1_F128($rop, $op);
+   yn_F128 ($rop, $op);
+
 
 =head1 OTHER FUNCTIONS
 
