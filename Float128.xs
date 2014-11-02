@@ -15,6 +15,10 @@
 #include <float.h>
 #include <stdlib.h>
 
+#ifdef __MINGW64_VERSION_MAJOR /* fenv.h needed to workaround nearbyintq() bug */
+#include <fenv.h>
+#endif
+
 #ifdef OLDPERL
 #define SvUOK SvIsUV
 #endif
@@ -1322,7 +1326,13 @@ void copysign_F128(float128 * rop, float128 * op1, float128 * op2) {
 }
 
 void cosh_F128(float128 * rop, float128 * op) {
+#ifdef __MINGW64_VERSION_MAJOR /* avoid calling coshq() as it's buggy */
+  float128 temp = sinhq(*op);
+  temp = powq(temp, 2) + 1.0Q;
+  *rop = sqrtq(temp);
+#else
   *rop = coshq(*op);
+#endif
 }
 
 void cos_F128(float128 * rop, float128 * op) {
@@ -1338,7 +1348,11 @@ void erfc_F128(float128 * rop, float128 * op) {
 }
 
 void exp_F128(float128 * rop, float128 * op) {
+#ifdef __MINGW64_VERSION_MAJOR /* avoid calling expq() as it's buggy */
+  *rop = powq(M_Eq, *op);
+#else
   *rop = expq(*op);
+#endif
 }
 
 void expm1_F128(float128 * rop, float128 * op) {
@@ -1362,7 +1376,13 @@ void floor_F128(float128 * rop, float128 * op) {
 }
 
 void fma_F128(float128 * rop, float128 * op1, float128 * op2, float128 * op3) {
+#ifdef __MINGW64_VERSION_MAJOR /* avoid calling fmaq() as it's buggy */
+  float128 temp = *op1 * *op2;
+  temp += *op3;
+  *rop = temp;
+#else
   *rop = fmaq(*op1, *op2, *op3);
+#endif
 }
 
 void fmax_F128(float128 * rop, float128 * op1, float128 * op2) {
@@ -1480,7 +1500,47 @@ void nan_F128(pTHX_ float128 * rop, SV * op) {
 }
 
 void nearbyint_F128(float128 * rop, float128 * op) {
+#ifdef __MINGW64_VERSION_MAJOR /* avoid calling nearbyintq() as it's buggy */
+  float128 do_floor, do_ceil;
+  int rnd = fegetround();
+  if(*op == 0.0Q || isinfq(*op) || isnanq(*op)) {
+    *rop = *op;
+    return;
+  }
+  do_floor = *op - floorq(*op);
+  do_ceil  = ceilq(*op) - *op;
+  if(do_ceil < do_floor) {
+    *rop = ceilq(*op);
+    return;
+  }
+  if(do_ceil > do_floor) {
+    *rop = floorq(*op);
+    return;
+  }
+  if(do_floor == do_ceil) {
+    if(rnd == FE_TONEAREST) {
+      if(remainderq(floorq(*op), 2.0Q) == 0.0Q) *rop = floorq(*op);
+      else *rop = ceilq(*op);
+      return;
+    }
+    if(rnd == FE_UPWARD) {
+      *rop = ceilq(*op);
+      return;
+    }
+    if(rnd == FE_DOWNWARD) {
+      *rop = floorq(*op);
+      return;
+    }
+    if(rnd == FE_TOWARDZERO) {
+      if(*op < 0.0Q) *rop = ceilq(*op);
+      if(*op > 0.0Q) *rop = floorq(*op);
+      return;
+    }
+  croak("nearbyint_F128 workaround for mingw64 compiler failed\n");
+  }
+#else
   *rop = nearbyintq(*op);
+#endif
 }
 
 void nextafter_F128(float128 * rop, float128 * op1, float128 * op2) {
@@ -1549,7 +1609,11 @@ void tanh_F128(float128 * rop, float128 * op) {
 }
 
 void tgamma_F128(float128 * rop, float128 * op) {
+#ifdef __MINGW64_VERSION_MAJOR /* avoid calling tgammaq() as it's buggy */
+  *rop = powq(M_Eq, lgammaq(*op));
+#else
   *rop = tgammaq(*op);
+#endif
 }
 
 void trunc_F128(float128 * rop, float128 * op) {
@@ -1595,7 +1659,18 @@ int _flt_radix(void) {
   return (int)FLT_RADIX;
 }
 
-
+SV * _fegetround(pTHX) {
+#ifdef __MINGW64_VERSION_MAJOR /* fenv.h has been included */
+  int r = fegetround();
+  if(r == FE_TONEAREST) return newSVpv("FE_TONEAREST", 0);
+  if(r == FE_TOWARDZERO) return newSVpv("FE_TOWARDZERO", 0);
+  if(r == FE_UPWARD) return newSVpv("FE_UPWARD", 0);
+  if(r == FE_DOWNWARD) return newSVpv("FE_DOWNWARD", 0);
+  return newSVpv("Unknown rounding mode", 0);
+#else
+  return newSVpv("Rounding mode undetermined - fenv.h not loaded", 0);
+#endif
+}
 
 
 
@@ -3260,5 +3335,12 @@ _long2iv_is_ok ()
 
 int
 _flt_radix ()
+
+
+SV *
+_fegetround ()
+CODE:
+  RETVAL = _fegetround (aTHX);
+OUTPUT:  RETVAL
 
 
