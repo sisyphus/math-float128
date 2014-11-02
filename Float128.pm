@@ -202,17 +202,11 @@ __END__
 
 =head1 NAME
 
-Math::Float128 - perl interface to C's __float128 operations
-
-
-=head1 BUGS
-
-  1) exp() segfaults with Strawberry Perl's 32-bit and 64-bit MinGW
-     compilers.
-  2) Needs quadmath.h in order to build.
+Math::Float128 - perl interface to C's (quadmath) __float128 operations
 
 
 =head1 DESCRIPTION
+
 
    use Math::Float128 qw(:all);
 
@@ -338,6 +332,8 @@ Math::Float128 - perl interface to C's __float128 operations
    will be returned.
    These are just interfaces to the standard math library functions.
    I'm assuming you already have access to their documentation.
+   These functions do not check their argument types - if you get
+   a segfault, check that you've supplied the correct argument type(s).
 
    acos_F128($rop, $op);
     acos($op) is assigned to $rop.
@@ -597,9 +593,12 @@ Math::Float128 - perl interface to C's __float128 operations
 
 =head1 BUGS
 
-   The mingw64 compilers have a buggy expq() function; therefore the
-   overloaded exp function doesn't return expq($arg) when a mingw64
-   compiler is in use - instead it returns e**$arg.
+   The mingw64 compilers have buggy coshq(), expq(), fmaq(), tgammaq()
+   and nearbyintq() functions that crash when called. When a mingw64
+   compiler is detected, this module uses workarounds for those problem
+   functions. See the documentation (above) for cosh_F128(), exp_F128(),
+   fma_F128(), nearbyint_F128() and tgamma_F128() for an outline of the
+   workarounds involved.
 
 
 =head1 LICENSE
