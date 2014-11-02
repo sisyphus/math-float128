@@ -2,7 +2,7 @@ use warnings;
 use strict;
 use Math::Float128 qw(:all);
 
-print "1..28\n";
+print "1..32\n";
 
 my $ld = NVtoF128(2.5);
 my $ld_copy = $ld;
@@ -215,6 +215,8 @@ else {
   print "not ok 22\n";
 }
 
+warn "\nRounding mode: ", Math::Float128::_fegetround(), "\n";
+
 nearbyint_F128($check, $ld + UnityF128(1));
 
 if($check ==  NVtoF128(4)) {print "ok 23\n"}
@@ -264,4 +266,38 @@ if($check == IVtoF128(-543)) {print "ok 28\n"}
 else {
   warn "\nExpected -543\nGot $check\n";
   print "not ok 28\n";
+}
+
+# Better do some more checking of nearbyint_F128 for mingw-w64 compiler builds:
+
+nearbyint_F128($check, NVtoF128(5.4));
+
+if($check == NVtoF128(5)) {print "ok 29\n"}
+else {
+  warn "\nExpected 5\nGot $check\n";
+  print "not ok 29\n";
+}
+
+nearbyint_F128($check, NVtoF128(-5.4));
+
+if($check == NVtoF128(-5)) {print "ok 30\n"}
+else {
+  warn "\nExpected -5\nGot $check\n";
+  print "not ok 30\n";
+}
+
+nearbyint_F128($check, NVtoF128(5.6));
+
+if($check == NVtoF128(6)) {print "ok 31\n"}
+else {
+  warn "\nExpected 6\nGot $check\n";
+  print "not ok 31\n";
+}
+
+nearbyint_F128($check, NVtoF128(-5.6));
+
+if($check == NVtoF128(-6)) {print "ok 32\n"}
+else {
+  warn "\nExpected -6\nGot $check\n";
+  print "not ok 32\n";
 }
