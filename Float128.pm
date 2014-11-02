@@ -333,7 +333,7 @@ Math::Float128 - perl interface to C's __float128 operations
 =head1 MATH LIBRARY FUNCTIONS
 
    With the following functions, "$rop" and "$op" are Math::Float128
-   objects, and "$iv" is just a normal perl scalar that either 
+   objects, and "$iv" is just a normal perl scalar that either
    holds a signed integer value, or to which a signed integer value
    will be returned.
    These are just interfaces to the standard math library functions.
@@ -371,6 +371,8 @@ Math::Float128 - perl interface to C's __float128 operations
 
    cosh_F128($rop, $op);
     cosh($op) is assigned to $rop.
+    On mingw-w64 compilers, coshq() crashes, so for those compilers
+    we assign sqrt((sinh($op) ** 2) + 1) to $rop.
 
    cos_F128($rop, $op);
     cos($op) is assigned to $rop.
@@ -383,6 +385,8 @@ Math::Float128 - perl interface to C's __float128 operations
 
    exp_F128($rop, $op);
     exp($op) is assigned to $rop.
+    On mingw-w64 compilers, expq() crashes, so for those compilers
+    we assign pow(M_Eq, $op), ie e**$op, to $rop.
 
    expm1_F128($rop, $op);
     expm1($op) is assigned to $rop.
@@ -401,6 +405,8 @@ Math::Float128 - perl interface to C's __float128 operations
 
    fma_F128($rop, $op1, $op2, $op3);
     fma($op1, $op2, $op3) is assigned to $rop.
+    On mingw-w64 compilers, fmaq() crashes, so for those compilers
+    we assign ($op1 * $op2)+$op3 to $rop.
 
    fmax_F128($rop, $op1, $op2);
     fmax($op1, $op2) is assigned to $rop.
@@ -491,6 +497,9 @@ Math::Float128 - perl interface to C's __float128 operations
 
    nearbyint_F128($rop, $op);
     nearbyint($op) is assigned to $rop.
+    On mingw-w64 compilers, nearbyintq() crashes, so for those compilers
+    we manually go through the procedure of assigning the correct value
+    (for the current rounding mode) to $rop.
 
    nextafter_F128($rop, $op1, $op2);
     nextafter($op1, $op2) is assigned to $rop.
@@ -543,6 +552,8 @@ Math::Float128 - perl interface to C's __float128 operations
 
    tgamma_F128($rop, $op);
     gamma($op) is assigned to $rop.
+    On mingw-w64 compilers, tgammaq() crashes, so for those compilers
+    we assign pow(M_Eq, lgamma($op)), ie e**lgamma($op), to $rop.
 
    trunc_F128($rop, $op);
     trunc($op) is assigned to $rop.
