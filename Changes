@@ -1,3 +1,5 @@
+0.05
+
 0.04
  - Add metadata to Makefile.PL.
  - Add f128_bytes()
