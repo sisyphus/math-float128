@@ -114,7 +114,7 @@ sub _overload_string {
 sub new {
 
     # This function caters for 2 possibilities:
-    # 1) that 'new' has been called OOP style - in which
+    # 1) that 'new' has been called as a method - in which
     #    case there will be a maximum of 2 args
     # 2) that 'new' has been called as a function - in
     #    which case there will be a maximum of 1 arg.
@@ -141,23 +141,19 @@ sub new {
     my $arg = shift;
     my $type = _itsa($arg);
 
-    if($type == 3) { # NV
-      if($arg == 0)    {return STRtoF128($arg)}
+    return UVtoF128 ($arg) if $type == 1; #UV
+    return IVtoF128 ($arg) if $type == 2; #IV
+
+    if($type == 3) {                      # NV
       if($arg != $arg) { return NaNF128()}
-      if(($arg / $arg) != ($arg / $arg)) { # Inf
+      if(($arg / $arg) != 1) { # Inf
         if($arg < 0) {return InfF128(-1)}
         return InfF128(1);
       }
       return NVtoF128($arg);
     }
 
-    if(
-       $type == 1 || #UV
-       $type == 2 || #IV
-       $type == 4    #PV
-                   ) {
-      return STRtoF128($arg);
-    }
+    return STRtoF128($arg) if $type == 4; #PV
 
     if($type == 113) { # Math::Float128
       return F128toF128($arg);
@@ -210,10 +206,33 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
 
    use Math::Float128 qw(:all);
 
-   my $arg = 32.1;
-   my $f1 = Math::Float128->new($arg);# Stringify $arg, then assign
-                                          # using C's strtoflt128()
-   my $f2 = NVtoF128($arg); # Assign the NV 32.1 to $f2.
+   $arg = ~0; # largest UV
+   $f1 = Math::Float128->new($arg); # Assign the UV ~0 to $f2.
+   $f2 = UVtoF128($arg);            # Assign the UV ~0 to $f2.
+
+   $arg = -21;
+   $f1 = Math::Float128->new($arg); # Assign the IV -21 to $f2.
+   $f2 = IVtoF128($arg);            # Assign the IV -21 to $f2.
+
+   $arg = 32.1;
+   $f1 = Math::Float128->new($arg); # Assign the NV 32.1 to $f2.
+   $f2 = NVtoF128($arg);            # Assign the NV 32.1 to $f2.
+
+   $arg = "32.1";
+   $f1 = Math::Float128->new($arg); # Assign strtoflt128("32.1") to $f2.
+   $f2 = STRtoF128($arg);           # Assign strtoflt128("32.1") to $f2.
+
+   $f3 = Math::Float128->new($f1); # Assign the value of $f1 to $f3.
+   $f4 = F128toF128($f1);          # Assign the value of $f1 to $f4.
+   $f5 = $f1;                      # Assign the value of $f1 to $f5.
+
+   This behaviour has changed from 0.04 and earlier.
+
+   NOTE:
+    Math::Float128->new(32.1) != Math::Float->new('32.1') unless
+    $Config{nvtype} reprots __float128. The same holds for many (but not
+    all) numeric values. In general, it's not always true (and is often
+    untrue) that Math::Float128->new($n) == Math::Float->new("$n")
 
 
 =head1 OVERLOADING
@@ -228,12 +247,36 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
     sqrt log exp
     sin cos atan2
 
-    Arguments to the overloaded operations must be Math::Float128
-    objects.
+    In those situations where the overload subroutine operates on 2
+    perl variables, then obviously one of those perl variables is
+    a Math::Float128 object. To determine the value of the other
+    variable the subroutine works through the following steps (in
+    order), using the first value it finds, or croaking if it gets
+    to step 6:
 
-     $f = $f + 3.1; # currently an error. Do instead:
+    1. If the variable is a UV (unsigned integer value) then that
+       value is used. The variable is considered to be a UV if
+       (perl 5.8) the UOK flag is set or if (perl 5.6) SvIsUV()
+       returns true.
 
-     $f = $f + Math::Float128->new('3.1');
+    2. If the variable is an IV (signed integer value) then that
+       value is used. The variable is considered to be an IV if the
+       IOK flag is set.
+
+    3. If the variable is an NV (floating point value) then that
+       value is used. The variable is considered to be an NV if the
+       NOK flag is set.
+
+    4. If the variable is a string (ie the POK flag is set) then the
+       value of that string is used.
+
+    5. If the variable is a Math::Float128 object then the value
+       encapsulated in that object is used.
+
+    6. If none of the above is true, then the second variable is
+       deemed to be of an invalid type. The subroutine croaks with
+       an appropriate error message.
+
 
 =head1 ASSIGNMENT FUNCTIONS
 
@@ -323,6 +366,7 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
    $string = F128toSTRP(f, $precision);
     Same as F128toSTR, but takes an additional arg that specifies the
     precision (in decimal digits) of the stringified return value.
+
 
 =head1 MATH LIBRARY FUNCTIONS
 
@@ -590,6 +634,7 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
    $hex = f128_bytes($f);
     Returns the hex representation of the _float128 value
     as a string of 32 hex characters.
+
 
 =head1 BUGS
 
