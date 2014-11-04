@@ -145,6 +145,7 @@ sub new {
     return IVtoF128 ($arg) if $type == 2; #IV
 
     if($type == 3) {                      # NV
+      if($arg == 0) {return NVtoF128($arg)}
       if($arg != $arg) { return NaNF128()}
       if(($arg / $arg) != 1) { # Inf
         if($arg < 0) {return InfF128(-1)}
@@ -229,10 +230,10 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
    This behaviour has changed from 0.04 and earlier.
 
    NOTE:
-    Math::Float128->new(32.1) != Math::Float->new('32.1') unless
-    $Config{nvtype} reprots __float128. The same holds for many (but not
+    Math::Float128->new(32.1) != Math::Float128->new('32.1') unless
+    $Config{nvtype} reports __float128. The same holds for many (but not
     all) numeric values. In general, it's not always true (and is often
-    untrue) that Math::Float128->new($n) == Math::Float->new("$n")
+    untrue) that Math::Float128->new($n) == Math::Float128->new("$n")
 
 
 =head1 OVERLOADING
