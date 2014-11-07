@@ -2134,7 +2134,11 @@ int _long2iv_is_ok(void) {
 
 /* FLT_RADIX is probably 2, but we can use this if we need to be sure. */
 int _flt_radix(void) {
+#ifdef FLT_RADIX
   return (int)FLT_RADIX;
+#else
+  return 0;
+#endif
 }
 
 SV * _fegetround(pTHX) {
