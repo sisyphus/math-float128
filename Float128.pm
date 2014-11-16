@@ -345,6 +345,89 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
     F128toSTR).
 
 
+=head1 ASSIGNMENT OF QUADMATH.H CONSTANTS
+
+   $iv = FLT128_DIG;
+    Returns FLT128_DIG or croaks if FLT128_DIG is not defined.
+
+   $f = FLT128_MAX;
+    Returns FLT128_MAX or croaks if FLT128_MAX is not defined.
+
+   $f = FLT128_MIN;
+    Returns FLT128_MIN or croaks if FLT128_MIN is not defined.
+
+   $f = FLT128_EPSILON;
+    Returns FLT128_EPSILON or croaks if FLT128_EPSILON is not
+    defined.
+
+   $f = FLT128_DENORM_MIN;
+    Returns FLT128_DENORM_MIN or croaks if FLT128_DENORM_MIN is
+    not defined.
+
+   $iv = FLT128_MANT_DIG;
+    Returns FLT128_MANT_DIG or croaks if FLT128_MANT_DIG is not
+   defined.
+
+   $iv = FLT128_MIN_EXP;
+    Returns FLT128_MIN_EXP or croaks if FLT128_MIN_EXP is not
+    defined.
+
+   $iv = FLT128_MAX_EXP;
+    Returns FLT128_MAX_EXP or croaks if FLT128_MAX_EXP is not
+    defined.
+
+   $iv = FLT128_MIN_10_EXP;
+    Returns FLT128_MIN_10_EXP or croaks if FLT128_MIN_10_EXP is
+    not defined.
+
+   $iv = FLT128_MAX_10_EXP;
+    Returns FLT128_MAX_10_EXP or croaks if FLT128_MAX_10_EXP is
+    not defined.
+
+   $f = M_Eq;
+    Returns M_Eq (e) or expq(1.0) if M_Eq is not defined.
+
+   $f = M_LOG2Eq;
+    Returns M_LOG2Eq or log2q(expq(1.0)) if M_LOG2Eq is not
+    defined.
+
+   $f = M_LOG10Eq;
+    Returns M_LOG10Eq or log10q(expq(1.0)) if M_LOG10Eq is not
+    defined.
+
+   $f = M_LN2q;
+    Returns M_LN2q or logq(2) if M_LN2q is not defined.
+
+   $f = M_LN10q;
+    Returns M_LN10q or logq(10) if M_LN10q is not defined.
+
+   $f = M_PIq;
+    Returns M_PIq (pi) or 2 * asinq(1) if M_PIq is not defined.
+
+   $f = M_PI_2q;
+    Returns M_PI_2q (pi/2) or asinq(1) if M_PI_2q is not defined.
+
+   $f = M_PI_4q;
+    Returns M_PI_4q (pi/2) or asinq(1)/2 if M_PI_4q is not defined.
+
+   $f = M_1_PIq;
+    Returns M_1_PIq (1/pi) or 0.5/asinq(1) if M_1_PIq is not
+    defined.
+
+   $f = M_2_PIq;
+    Returns M_2_PIq (2/pi) or 1/asinq(1) if M_2_PIq is not defined.
+
+   $f = M_2_SQRTPIq;
+    Returns M_2_SQRTPIq (2/sqrt(pi)) or 2/sqrtq(pi) if M_2_SQRTPIq
+    is not defined.
+
+   $f = M_SQRT2q;
+    Returns M_SQRT2q or sqrtq(2)) if M_SQRT2q is not defined.
+
+   $f = M_SQRT1_2q;
+    Returns M_SQRT1_2q or 1/sqrtq(2)) if M_SQRT1_2q is not defined.
+
+
 
 =head1 RETRIEVAL FUNCTIONS
 
