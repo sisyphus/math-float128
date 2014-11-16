@@ -1311,6 +1311,7 @@ SV * F128toNV(pTHX_ SV * f) {
 /* #define FLT128_MAX 1.18973149535723176508575932662800702e4932Q */
 
 SV * _FLT128_MAX(pTHX) {
+#ifdef FLT128_MAX
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1325,11 +1326,15 @@ SV * _FLT128_MAX(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
+#else
+     croak("FLT128_MAX not implemented");
+#endif
 }
 
 /* #define FLT128_MIN 3.36210314311209350626267781732175260e-4932Q */
 
 SV * _FLT128_MIN(pTHX) {
+#ifdef FLT128_MIN
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1344,11 +1349,15 @@ SV * _FLT128_MIN(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
+#else
+     croak("FLT128_MIN not implemented");
+#endif
 }
 
 /* #define FLT128_EPSILON 1.92592994438723585305597794258492732e-34Q */
 
 SV * _FLT128_EPSILON(pTHX) {
+#ifdef FLT128_EPSILON
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1363,12 +1372,16 @@ SV * _FLT128_EPSILON(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
+#else
+     croak("FLT128_EPSILON not implemented");
+#endif
 }
 
 /* #define FLT128_DENORM_MIN 6.475175119438025110924438958227646552e-4966Q */
 
 
 SV * _FLT128_DENORM_MIN(pTHX) {
+#ifdef FLT128_DENORM_MIN
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1383,6 +1396,9 @@ SV * _FLT128_DENORM_MIN(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
+#else
+     croak("FLT128_DENORM_MIN not implemented");
+#endif
 }
 
 /* #define FLT128_MANT_DIG 113 */
@@ -1441,7 +1457,9 @@ int _FLT128_MAX_10_EXP(void) {
 /*#define M_Eq		2.7182818284590452353602874713526625Q */  /* e */
 
 SV * _M_Eq(pTHX) {
-#ifdef M_Eq
+#ifndef M_Eq
+#define M_Eq expq(1.0Q)
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1456,15 +1474,14 @@ SV * _M_Eq(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_Eq not implemented");
-#endif
 }
 
 /* #define M_LOG2Eq	1.4426950408889634073599246810018921Q */  /* log_2 e */
 
 SV * _M_LOG2Eq(pTHX) {
-#ifdef M_LOG2Eq
+#ifndef M_LOG2Eq
+#define M_LOG2Eq log2q(expq(1.0Q))
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1479,15 +1496,14 @@ SV * _M_LOG2Eq(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_LOG2Eq not implemented");
-#endif
 }
 
 /* #define M_LOG10Eq	0.4342944819032518276511289189166051Q */  /* log_10 e */
 
 SV * _M_LOG10Eq(pTHX) {
-#ifdef M_LOG10Eq
+#ifndef M_LOG10Eq
+#define M_LOG10Eq lo10q(expq(1.0Q))
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1502,15 +1518,14 @@ SV * _M_LOG10Eq(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_LOG10Eq not implemented");
-#endif
 }
 
 /* #define M_LN2q		0.6931471805599453094172321214581766Q */  /* log_e 2 */
 
 SV * _M_LN2q(pTHX) {
-#ifdef M_LN2q
+#ifndef M_LN2q
+#define M_LN2q logq(2.0Q)
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1525,15 +1540,14 @@ SV * _M_LN2q(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_LN2q  not implemented";
-#endif
 }
 
 /* #define M_LN10q		2.3025850929940456840179914546843642Q */ /* log_e 10 */
 
 SV * _M_LN10q(pTHX) {
-#ifdef M_LN10q
+#ifndef M_LN10q
+#define M_LN10q logq(10.0Q)
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1548,15 +1562,14 @@ SV * _M_LN10q(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_LN10q not implemented");
-#endif
 }
 
 /* #define M_PIq		3.1415926535897932384626433832795029Q */  /* pi */
 
 SV * _M_PIq(pTHX) {
-#ifdef M_PIq
+#ifndef M_PIq
+#define M_PIq 2.0Q*asinq(1.0Q)
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1571,15 +1584,14 @@ SV * _M_PIq(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_PIq not implemented");
-#endif
 }
 
 /* #define M_PI_2q		1.5707963267948966192313216916397514Q */  /* pi/2 */
 
 SV * _M_PI_2q(pTHX) {
-#ifdef M_PI_2q
+#ifndef M_PI_2q
+#define M_PI_2q asinq(1.0Q)
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1594,15 +1606,14 @@ SV * _M_PI_2q(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_PI_2q not implemented");
-#endif
 }
 
 /* #define M_PI_4q		0.7853981633974483096156608458198757Q */  /* pi/4 */
 
 SV * _M_PI_4q(pTHX) {
-#ifdef M_PI_4q
+#ifndef M_PI_4q
+#define M_PI_4q asinq(1.0Q)/2.0Q
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1617,15 +1628,14 @@ SV * _M_PI_4q(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_PI_4q not implemented");
-#endif
 }
 
 /* #define M_1_PIq		0.3183098861837906715377675267450287Q */  /* 1/pi */
 
 SV * _M_1_PIq(pTHX) {
-#ifdef M_1_PIq
+#ifndef M_1_PIq
+#define M_1_PIq 0.5Q/asinq(1.0Q)
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1640,15 +1650,14 @@ SV * _M_1_PIq(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_1_PIq not implemented");
-#endif
 }
 
 /* #define M_2_PIq		0.6366197723675813430755350534900574Q */  /* 2/pi */
 
 SV * _M_2_PIq(pTHX) {
-#ifdef M_2_PIq
+#ifndef M_2_PIq
+#define M_2_PIq 1.0Q/asinq(1.0Q)
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1663,15 +1672,14 @@ SV * _M_2_PIq(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_2_PIq not implemented");
-#endif
 }
 
 /* #define M_2_SQRTPIq	1.1283791670955125738961589031215452Q */  /* 2/sqrt(pi) */
 
 SV * _M_2_SQRTPIq(pTHX) {
-#ifdef M_2_SQRTPIq
+#ifndef M_2_SQRTPIq
+#define M_2_SQRTPIq 2.0Q/sqrtq(2.0Q*asinq(1.0Q))
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1686,15 +1694,14 @@ SV * _M_2_SQRTPIq(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_2_SQRTPIq not implemented");
-#endif
 }
 
 /* #define M_SQRT2q	1.4142135623730950488016887242096981Q */  /* sqrt(2) */
 
 SV * _M_SQRT2q(pTHX) {
-#ifdef M_SQRT2q
+#ifndef M_SQRT2q
+#define M_SQRT2q sqrtq(2.0Q)
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1709,15 +1716,14 @@ SV * _M_SQRT2q(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_SQRT2q not implemented");
-#endif
 }
 
 /* #define M_SQRT1_2q	0.7071067811865475244008443621048490Q */  /* 1/sqrt(2) */
 
 SV * _M_SQRT1_2q(pTHX) {
-#ifdef M_SQRT1_2q
+#ifndef M_SQRT1_2q
+#define M_SQRT1_2q 1.0Q/sqrtq(2.0Q)
+#endif
      float128 * f;
      SV * obj_ref, * obj;
 
@@ -1732,9 +1738,6 @@ SV * _M_SQRT1_2q(pTHX) {
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
      return obj_ref;
-#else
-     croak("M_SQRT1_2q not implemented");
-#endif
 }
 
 void _f128_bytes(pTHX_ SV * sv) {
