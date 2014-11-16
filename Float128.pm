@@ -408,7 +408,7 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
     Returns M_PI_2q (pi/2) or asinq(1) if M_PI_2q is not defined.
 
    $f = M_PI_4q;
-    Returns M_PI_4q (pi/2) or asinq(1)/2 if M_PI_4q is not defined.
+    Returns M_PI_4q (pi/4) or asinq(1)/2 if M_PI_4q is not defined.
 
    $f = M_1_PIq;
     Returns M_1_PIq (1/pi) or 0.5/asinq(1) if M_1_PIq is not
@@ -458,8 +458,9 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
    objects, and "$iv" is just a normal perl scalar that either
    holds a signed integer value, or to which a signed integer value
    will be returned.
-   These are just interfaces to the standard math library functions.
-   I'm assuming you already have access to their documentation.
+   These are just interfaces to the quadmath equivalents to the (fairly
+   standard) math library functions. I'm assuming you already have
+   access to the documentation of those math library functions.
    These functions do not check their argument types - if you get
    a segfault, check that you've supplied the correct argument type(s).
 
