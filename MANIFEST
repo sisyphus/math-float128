@@ -4,6 +4,7 @@ Changes
 Float128.pm
 Float128.xs
 Makefile.PL
+quad.in
 typemap
 t/01load.t
 t/02abs.t
