@@ -15,6 +15,7 @@ t/06inc_dec.t
 t/07int.t
 t/08log_exp.t
 t/09new.t
+t/nnum.t
 t/pod.t
 t/10pow.t
 t/11stringification.t
