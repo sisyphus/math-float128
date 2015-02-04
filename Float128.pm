@@ -229,6 +229,15 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
 
    This behaviour has changed from 0.04 and earlier.
 
+   A number of the functions below accept string arguments. These arguments
+   will be tested by the perl API function looks_like_number() for the
+   presence of non-numeric characters. If any such non-numeric characters
+   are detected, then the global non-numeric flag (which is initially set to
+   0) will be incremented. You can query the value this global flag holds by
+   running Math::Float128::nnumflag() and you can manually alter the value
+   of this global using Math::Float128::set_nnum and
+   Math::Float128::clear_nnum. These functions are documented below.
+
    NOTE:
     Math::Float128->new(32.1) != Math::Float128->new('32.1') unless
     $Config{nvtype} reports __float128. The same holds for many (but not
@@ -696,6 +705,22 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
 
 
 =head1 OTHER FUNCTIONS
+
+    $iv = Math::Float128::nnumflag(); # not exported
+     Returns the value of the non-numeric flag. This flag is
+     initialized to zero, but incemented by 1 whenever a function
+     is handed a string containing non-numeric characters. The
+     value of the flag therefore tells us how many times functions
+     have been handed such a string. The flag can be reset to 0 by
+     running Math::Float128::clear_nnum().
+
+    Math::Float128::set_nnum($iv); # not exported
+     Resets the global non-numeric flag to the value specified by
+     $iv.
+
+    Math::Float128::clear_nnum(); # not exported
+     Resets the global non-numeric flag to 0.(Essentially the same
+     as running Math::Float128::set_nnum(0).)
 
     $bool = is_NaNF128($f);
      Returns 1 if $f is a Math::Float128 NaN.
