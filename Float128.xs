@@ -39,6 +39,8 @@ typedef __float128 float128 __attribute__ ((aligned(8)));
 typedef __float128 float128;
 #endif
 
+int nnum = 0;
+
 void flt128_set_prec(pTHX_ int x) {
     if(x < 1)croak("1st arg (precision) to flt128_set_prec must be at least 1");
     _DIGITS = x;
@@ -191,10 +193,12 @@ SV * is_ZeroF128(pTHX_ SV * b) {
 }
 
 
-SV * STRtoF128(pTHX_ char * str) {
+SV * STRtoF128(pTHX_ SV * str) {
      float128 * f;
      SV * obj_ref, * obj;
      char * ptr;
+
+     if(!looks_like_number(str)) nnum++;
 
      Newx(f, 1, float128);
      if(f == NULL) croak("Failed to allocate memory in STRtoF128 function");
@@ -202,7 +206,7 @@ SV * STRtoF128(pTHX_ char * str) {
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
 
-     *f = strtoflt128(str, &ptr);
+     *f = strtoflt128(SvPV_nolen(str), &ptr);
 
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
@@ -366,6 +370,7 @@ SV * _overload_add(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) + strtoflt128(SvPV_nolen(b), NULL);
         return obj_ref;
     }
@@ -412,6 +417,7 @@ SV * _overload_mul(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) * strtoflt128(SvPV_nolen(b), NULL);
         return obj_ref;
     }
@@ -459,6 +465,7 @@ SV * _overload_sub(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(third == &PL_sv_yes) *ld = strtoflt128(SvPV_nolen(b), NULL) - *(INT2PTR(float128 *, SvIV(SvRV(a))));
        else *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) - strtoflt128(SvPV_nolen(b), NULL);
        return obj_ref;
@@ -518,6 +525,7 @@ SV * _overload_div(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(third == &PL_sv_yes) *ld = strtoflt128(SvPV_nolen(b), NULL) / *(INT2PTR(float128 *, SvIV(SvRV(a))));
        else *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) / strtoflt128(SvPV_nolen(b), NULL);
        return obj_ref;
@@ -552,6 +560,7 @@ SV * _overload_equiv(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
         return newSViv(0);
     }
@@ -585,6 +594,7 @@ SV * _overload_not_equiv(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) != strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
         return newSViv(0);
     }
@@ -633,6 +643,7 @@ SV * _overload_add_eq(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) += strtoflt128(SvPV_nolen(b), NULL);
         return a;
     }
@@ -670,6 +681,7 @@ SV * _overload_mul_eq(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) *= strtoflt128(SvPV_nolen(b), NULL);
         return a;
     }
@@ -707,6 +719,7 @@ SV * _overload_sub_eq(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) -= strtoflt128(SvPV_nolen(b), NULL);
         return a;
     }
@@ -744,6 +757,7 @@ SV * _overload_div_eq(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) /= strtoflt128(SvPV_nolen(b), NULL);
         return a;
     }
@@ -779,6 +793,7 @@ SV * _overload_lt(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
         return newSViv(0);
     }
@@ -812,6 +827,7 @@ SV * _overload_gt(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
         return newSViv(0);
     }
@@ -845,6 +861,7 @@ SV * _overload_lte(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
         return newSViv(0);
     }
@@ -878,6 +895,7 @@ SV * _overload_gte(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
         return newSViv(0);
     }
@@ -917,6 +935,7 @@ SV * _overload_spaceship(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == strtoflt128(SvPV_nolen(b), NULL)) return newSViv( 0);
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  strtoflt128(SvPV_nolen(b), NULL)) return newSViv(-1);
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  strtoflt128(SvPV_nolen(b), NULL)) return newSViv( 1);
@@ -1155,6 +1174,7 @@ SV * _overload_atan2(pTHX_ SV * a, SV * b, SV * third) {
      }
 
      if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(third == &PL_sv_yes)
             *f = atan2q(strtoflt128(SvPV_nolen(b), NULL), *(INT2PTR(float128 *, SvIV(SvRV(a)))));
        else *f = atan2q(*(INT2PTR(float128 *, SvIV(SvRV(a)))), strtoflt128(SvPV_nolen(b), NULL));
@@ -1225,6 +1245,7 @@ SV * _overload_pow(pTHX_ SV * a, SV * b, SV * third) {
      }
 
      if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        if(third == &PL_sv_yes)
             *f = powq(strtoflt128(SvPV_nolen(b), NULL), *(INT2PTR(float128 *, SvIV(SvRV(a)))));
        else *f = powq(*(INT2PTR(float128 *, SvIV(SvRV(a)))), strtoflt128(SvPV_nolen(b), NULL));
@@ -1265,6 +1286,7 @@ SV * _overload_pow_eq(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
+       if(!looks_like_number(b)) nnum++;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) = powq(*(INT2PTR(float128 *, SvIV(SvRV(a)))),
                                                     strtoflt128(SvPV_nolen(b), NULL));
         return a;
@@ -2157,6 +2179,24 @@ SV * _fegetround(pTHX) {
 #endif
 }
 
+int nnumflag(void) {
+  return nnum;
+}
+
+void clear_nnum(void) {
+  nnum = 0;
+}
+
+void set_nnum(int x) {
+  nnum = x;
+}
+
+int _lln(pTHX_ SV * x) {
+  if(looks_like_number(x)) return 1;
+  return 0;
+}
+
+
 
 
 
@@ -2238,7 +2278,7 @@ OUTPUT:  RETVAL
 
 SV *
 STRtoF128 (str)
-	char *	str
+	SV *	str
 CODE:
   RETVAL = STRtoF128 (aTHX_ str);
 OUTPUT:  RETVAL
@@ -3828,4 +3868,47 @@ CODE:
   RETVAL = _fegetround (aTHX);
 OUTPUT:  RETVAL
 
+
+int
+nnumflag ()
+
+
+void
+clear_nnum ()
+
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        clear_nnum();
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+void
+set_nnum (x)
+	int	x
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        set_nnum(x);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
+
+int
+_lln (x)
+	SV *	x
+CODE:
+  RETVAL = _lln (aTHX_ x);
+OUTPUT:  RETVAL
 
