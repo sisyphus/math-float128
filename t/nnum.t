@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Math::Float128 qw(:all);
 
-print "1..4\n";
+print "1..7\n";
 
 *nnf        = \&Math::Float128::nnumflag;
 *set_nnum   = \&Math::Float128::set_nnum;
@@ -40,4 +40,31 @@ else {
   warn "\nExpected -13, got $rop\n";
   warn "nnumflag() expected 1, got ", nnf(), "\n";
   print "not ok 4\n";
+}
+
+$rop = Math::Float128->new('0xb');
+
+if($rop == 11 && nnf() == 2) {print "ok 5\n"}
+else {
+  warn "\nExpected 11, got $rop\n";
+  warn "nnumflag() expected 2, got ", nnf(), "\n";
+  print "not ok 5\n";
+}
+
+$rop = Math::Float128->new('0XB');
+
+if($rop == 11 && nnf() == 3) {print "ok 6\n"}
+else {
+  warn "\nExpected 11, got $rop\n";
+  warn "nnumflag() expected 3, got ", nnf(), "\n";
+  print "not ok 6\n";
+}
+
+$rop = Math::Float128->new('011');
+
+if($rop == 11 && nnf() == 3) {print "ok 7\n"}
+else {
+  warn "\nExpected 11, got $rop\n";
+  warn "nnumflag() expected 3, got ", nnf(), "\n";
+  print "not ok 7\n";
 }
