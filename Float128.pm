@@ -233,10 +233,14 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
    will be tested by the perl API function looks_like_number() for the
    presence of non-numeric characters. If any such non-numeric characters
    are detected, then the global non-numeric flag (which is initially set to
-   0) will be incremented. You can query the value this global flag holds by
-   running Math::Float128::nnumflag() and you can manually alter the value
-   of this global using Math::Float128::set_nnum and
-   Math::Float128::clear_nnum. These functions are documented below.
+   0) will be incremented.
+   Note that hex strings (eg '0xc') will be assigned as intended (to 12, for
+   the given example), yet looks_like_number() will return false for such
+   strings.
+   You can query the value held by the global non-numeric flag by running
+   Math::Float128::nnumflag() and you can manually alter the value of this
+   global using Math::Float128::set_nnum and Math::Float128::clear_nnum.
+   These functions are documented below.
 
    NOTE:
     Math::Float128->new(32.1) != Math::Float128->new('32.1') unless
