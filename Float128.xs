@@ -193,11 +193,21 @@ SV * is_ZeroF128(pTHX_ SV * b) {
 }
 
 
+void _nnum_inc (char * p) {
+  int i = 0;
+  for(;;i++) {
+    if(p[i] == 0) break;
+    if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+       nnum++;
+       break;
+    }
+  }
+}
+
 SV * STRtoF128(pTHX_ SV * str) {
      float128 * f;
      SV * obj_ref, * obj;
      char * p;
-     int i = 0;
 
      Newx(f, 1, float128);
      if(f == NULL) croak("Failed to allocate memory in STRtoF128 function");
@@ -207,13 +217,7 @@ SV * STRtoF128(pTHX_ SV * str) {
 
      *f = strtoflt128(SvPV_nolen(str), &p);
 
-     for(;;i++) {
-       if(p[i] == 0) break;
-       if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-         nnum++;
-         break;
-       }
-     }
+     _nnum_inc(p);
 
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
@@ -378,15 +382,8 @@ SV * _overload_add(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) + strtoflt128(SvPV_nolen(b), &p);
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return obj_ref;
     }
 
@@ -433,15 +430,8 @@ SV * _overload_mul(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) * strtoflt128(SvPV_nolen(b), &p);
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return obj_ref;
     }
 
@@ -489,16 +479,9 @@ SV * _overload_sub(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        if(third == &PL_sv_yes) *ld = strtoflt128(SvPV_nolen(b), &p) - *(INT2PTR(float128 *, SvIV(SvRV(a))));
        else *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) - strtoflt128(SvPV_nolen(b), &p);
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return obj_ref;
     }
 
@@ -557,16 +540,9 @@ SV * _overload_div(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        if(third == &PL_sv_yes) *ld = strtoflt128(SvPV_nolen(b), &p) / *(INT2PTR(float128 *, SvIV(SvRV(a))));
        else *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) / strtoflt128(SvPV_nolen(b), &p);
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return obj_ref;
     }
 
@@ -600,25 +576,12 @@ SV * _overload_equiv(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == strtoflt128(SvPV_nolen(b), &p)) {
-         for(;;i++) {
-           if(p[i] == 0) break;
-           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-             nnum++;
-             break;
-           }
-         }
+         _nnum_inc(p);
          return newSViv(1);
        }
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
-        return newSViv(0);
+       _nnum_inc(p);
+       return newSViv(0);
     }
 
     if(sv_isobject(b)) {
@@ -651,24 +614,11 @@ SV * _overload_not_equiv(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) != strtoflt128(SvPV_nolen(b), &p)) {
-         for(;;i++) {
-           if(p[i] == 0) break;
-           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-             nnum++;
-             break;
-           }
-         }
+         _nnum_inc(p);
          return newSViv(1);
        }
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return newSViv(0);
     }
 
@@ -717,15 +667,8 @@ SV * _overload_add_eq(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) += strtoflt128(SvPV_nolen(b), &p);
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return a;
     }
 
@@ -763,15 +706,8 @@ SV * _overload_mul_eq(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) *= strtoflt128(SvPV_nolen(b), &p);
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return a;
     }
 
@@ -809,15 +745,8 @@ SV * _overload_sub_eq(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) -= strtoflt128(SvPV_nolen(b), &p);
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return a;
     }
 
@@ -855,15 +784,8 @@ SV * _overload_div_eq(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) /= strtoflt128(SvPV_nolen(b), &p);
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return a;
     }
 
@@ -899,24 +821,11 @@ SV * _overload_lt(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < strtoflt128(SvPV_nolen(b), &p)) {
-         for(;;i++) {
-           if(p[i] == 0) break;
-           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-             nnum++;
-             break;
-           }
-         }
+         _nnum_inc(p);
          return newSViv(1);
        }
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return newSViv(0);
     }
 
@@ -950,24 +859,11 @@ SV * _overload_gt(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > strtoflt128(SvPV_nolen(b), &p)) {
-         for(;;i++) {
-           if(p[i] == 0) break;
-           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-             nnum++;
-             break;
-           }
-         }
+         _nnum_inc(p);
          return newSViv(1);
        }
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return newSViv(0);
     }
 
@@ -1001,24 +897,11 @@ SV * _overload_lte(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= strtoflt128(SvPV_nolen(b), &p)) {
-         for(;;i++) {
-           if(p[i] == 0) break;
-           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-             nnum++;
-             break;
-           }
-         }
+         _nnum_inc(p);
          return newSViv(1);
        }
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return newSViv(0);
     }
 
@@ -1052,24 +935,11 @@ SV * _overload_gte(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= strtoflt128(SvPV_nolen(b), &p)) {
-         for(;;i++) {
-           if(p[i] == 0) break;
-           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-             nnum++;
-             break;
-           }
-         }
+         _nnum_inc(p);
          return newSViv(1);
        }
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return newSViv(0);
     }
 
@@ -1109,35 +979,16 @@ SV * _overload_spaceship(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char *p;
-       int i = 0;
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == strtoflt128(SvPV_nolen(b), &p)) {
-         for(;;i++) {
-           if(p[i] == 0) break;
-           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-             nnum++;
-             break;
-           }
-         }
+         _nnum_inc(p);
          return newSViv( 0);
        }
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  strtoflt128(SvPV_nolen(b), &p)) {
-         for(;;i++) {
-           if(p[i] == 0) break;
-           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-             nnum++;
-             break;
-           }
-         }
+         _nnum_inc(p);
          return newSViv(-1);
        }
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  strtoflt128(SvPV_nolen(b), &p)) {
-         for(;;i++) {
-           if(p[i] == 0) break;
-           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-             nnum++;
-             break;
-           }
-         }
+         _nnum_inc(p);
          return newSViv( 1);
        }
        return &PL_sv_undef; /* it's a nan */
@@ -1376,17 +1227,10 @@ SV * _overload_atan2(pTHX_ SV * a, SV * b, SV * third) {
 
      if(SvPOK(b)) {
        char * p;
-       int i = 0;
        if(third == &PL_sv_yes)
             *f = atan2q(strtoflt128(SvPV_nolen(b), &p), *(INT2PTR(float128 *, SvIV(SvRV(a)))));
        else *f = atan2q(*(INT2PTR(float128 *, SvIV(SvRV(a)))), strtoflt128(SvPV_nolen(b), &p));
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return obj_ref;
      }
 
@@ -1455,17 +1299,10 @@ SV * _overload_pow(pTHX_ SV * a, SV * b, SV * third) {
 
      if(SvPOK(b)) {
        char * p;
-       int i = 0;
        if(third == &PL_sv_yes)
             *f = powq(strtoflt128(SvPV_nolen(b), &p), *(INT2PTR(float128 *, SvIV(SvRV(a)))));
        else *f = powq(*(INT2PTR(float128 *, SvIV(SvRV(a)))), strtoflt128(SvPV_nolen(b), &p));
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return obj_ref;
      }
 
@@ -1504,16 +1341,9 @@ SV * _overload_pow_eq(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvPOK(b)) {
        char * p;
-       int i = 0;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) = powq(*(INT2PTR(float128 *, SvIV(SvRV(a)))),
                                                     strtoflt128(SvPV_nolen(b), &p));
-       for(;;i++) {
-         if(p[i] == 0) break;
-         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
-           nnum++;
-           break;
-         }
-       }
+       _nnum_inc(p);
        return a;
     }
 
@@ -2427,6 +2257,8 @@ int _lln(pTHX_ SV * x) {
 
 
 
+
+
 MODULE = Math::Float128  PACKAGE = Math::Float128
 
 PROTOTYPES: DISABLE
@@ -2500,6 +2332,22 @@ is_ZeroF128 (b)
 CODE:
   RETVAL = is_ZeroF128 (aTHX_ b);
 OUTPUT:  RETVAL
+
+void
+_nnum_inc (p)
+	char *	p
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        _nnum_inc(p);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
 
 SV *
 STRtoF128 (str)
