@@ -196,9 +196,8 @@ SV * is_ZeroF128(pTHX_ SV * b) {
 SV * STRtoF128(pTHX_ SV * str) {
      float128 * f;
      SV * obj_ref, * obj;
-     char * ptr;
-
-     if(!looks_like_number(str)) nnum++;
+     char * p;
+     int i = 0;
 
      Newx(f, 1, float128);
      if(f == NULL) croak("Failed to allocate memory in STRtoF128 function");
@@ -206,7 +205,15 @@ SV * STRtoF128(pTHX_ SV * str) {
      obj_ref = newSV(0);
      obj = newSVrv(obj_ref, "Math::Float128");
 
-     *f = strtoflt128(SvPV_nolen(str), &ptr);
+     *f = strtoflt128(SvPV_nolen(str), &p);
+
+     for(;;i++) {
+       if(p[i] == 0) break;
+       if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+         nnum++;
+         break;
+       }
+     }
 
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
@@ -370,9 +377,17 @@ SV * _overload_add(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) + strtoflt128(SvPV_nolen(b), NULL);
-        return obj_ref;
+       char * p;
+       int i = 0;
+       *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) + strtoflt128(SvPV_nolen(b), &p);
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return obj_ref;
     }
 
     if(sv_isobject(b)) {
@@ -417,9 +432,17 @@ SV * _overload_mul(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) * strtoflt128(SvPV_nolen(b), NULL);
-        return obj_ref;
+       char * p;
+       int i = 0;
+       *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) * strtoflt128(SvPV_nolen(b), &p);
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return obj_ref;
     }
 
     if(sv_isobject(b)) {
@@ -465,9 +488,17 @@ SV * _overload_sub(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       if(third == &PL_sv_yes) *ld = strtoflt128(SvPV_nolen(b), NULL) - *(INT2PTR(float128 *, SvIV(SvRV(a))));
-       else *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) - strtoflt128(SvPV_nolen(b), NULL);
+       char * p;
+       int i = 0;
+       if(third == &PL_sv_yes) *ld = strtoflt128(SvPV_nolen(b), &p) - *(INT2PTR(float128 *, SvIV(SvRV(a))));
+       else *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) - strtoflt128(SvPV_nolen(b), &p);
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
        return obj_ref;
     }
 
@@ -525,9 +556,17 @@ SV * _overload_div(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       if(third == &PL_sv_yes) *ld = strtoflt128(SvPV_nolen(b), NULL) / *(INT2PTR(float128 *, SvIV(SvRV(a))));
-       else *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) / strtoflt128(SvPV_nolen(b), NULL);
+       char * p;
+       int i = 0;
+       if(third == &PL_sv_yes) *ld = strtoflt128(SvPV_nolen(b), &p) / *(INT2PTR(float128 *, SvIV(SvRV(a))));
+       else *ld = *(INT2PTR(float128 *, SvIV(SvRV(a)))) / strtoflt128(SvPV_nolen(b), &p);
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
        return obj_ref;
     }
 
@@ -560,8 +599,25 @@ SV * _overload_equiv(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
+       char * p;
+       int i = 0;
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == strtoflt128(SvPV_nolen(b), &p)) {
+         for(;;i++) {
+           if(p[i] == 0) break;
+           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+             nnum++;
+             break;
+           }
+         }
+         return newSViv(1);
+       }
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
         return newSViv(0);
     }
 
@@ -594,9 +650,26 @@ SV * _overload_not_equiv(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) != strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
-        return newSViv(0);
+       char * p;
+       int i = 0;
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) != strtoflt128(SvPV_nolen(b), &p)) {
+         for(;;i++) {
+           if(p[i] == 0) break;
+           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+             nnum++;
+             break;
+           }
+         }
+         return newSViv(1);
+       }
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return newSViv(0);
     }
 
     if(sv_isobject(b)) {
@@ -643,9 +716,17 @@ SV * _overload_add_eq(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       *(INT2PTR(float128 *, SvIV(SvRV(a)))) += strtoflt128(SvPV_nolen(b), NULL);
-        return a;
+       char * p;
+       int i = 0;
+       *(INT2PTR(float128 *, SvIV(SvRV(a)))) += strtoflt128(SvPV_nolen(b), &p);
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return a;
     }
 
     if(sv_isobject(b)) {
@@ -681,9 +762,17 @@ SV * _overload_mul_eq(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       *(INT2PTR(float128 *, SvIV(SvRV(a)))) *= strtoflt128(SvPV_nolen(b), NULL);
-        return a;
+       char * p;
+       int i = 0;
+       *(INT2PTR(float128 *, SvIV(SvRV(a)))) *= strtoflt128(SvPV_nolen(b), &p);
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return a;
     }
 
     if(sv_isobject(b)) {
@@ -719,9 +808,17 @@ SV * _overload_sub_eq(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       *(INT2PTR(float128 *, SvIV(SvRV(a)))) -= strtoflt128(SvPV_nolen(b), NULL);
-        return a;
+       char * p;
+       int i = 0;
+       *(INT2PTR(float128 *, SvIV(SvRV(a)))) -= strtoflt128(SvPV_nolen(b), &p);
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return a;
     }
 
     if(sv_isobject(b)) {
@@ -757,9 +854,17 @@ SV * _overload_div_eq(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       *(INT2PTR(float128 *, SvIV(SvRV(a)))) /= strtoflt128(SvPV_nolen(b), NULL);
-        return a;
+       char * p;
+       int i = 0;
+       *(INT2PTR(float128 *, SvIV(SvRV(a)))) /= strtoflt128(SvPV_nolen(b), &p);
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return a;
     }
 
     if(sv_isobject(b)) {
@@ -793,9 +898,26 @@ SV * _overload_lt(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
-        return newSViv(0);
+       char * p;
+       int i = 0;
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < strtoflt128(SvPV_nolen(b), &p)) {
+         for(;;i++) {
+           if(p[i] == 0) break;
+           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+             nnum++;
+             break;
+           }
+         }
+         return newSViv(1);
+       }
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return newSViv(0);
     }
 
     if(sv_isobject(b)) {
@@ -827,9 +949,26 @@ SV * _overload_gt(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
-        return newSViv(0);
+       char * p;
+       int i = 0;
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > strtoflt128(SvPV_nolen(b), &p)) {
+         for(;;i++) {
+           if(p[i] == 0) break;
+           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+             nnum++;
+             break;
+           }
+         }
+         return newSViv(1);
+       }
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return newSViv(0);
     }
 
     if(sv_isobject(b)) {
@@ -861,9 +1000,26 @@ SV * _overload_lte(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
-        return newSViv(0);
+       char * p;
+       int i = 0;
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= strtoflt128(SvPV_nolen(b), &p)) {
+         for(;;i++) {
+           if(p[i] == 0) break;
+           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+             nnum++;
+             break;
+           }
+         }
+         return newSViv(1);
+       }
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return newSViv(0);
     }
 
     if(sv_isobject(b)) {
@@ -895,9 +1051,26 @@ SV * _overload_gte(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= strtoflt128(SvPV_nolen(b), NULL)) return newSViv(1);
-        return newSViv(0);
+       char * p;
+       int i = 0;
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= strtoflt128(SvPV_nolen(b), &p)) {
+         for(;;i++) {
+           if(p[i] == 0) break;
+           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+             nnum++;
+             break;
+           }
+         }
+         return newSViv(1);
+       }
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return newSViv(0);
     }
 
      if(sv_isobject(b)) {
@@ -935,10 +1108,38 @@ SV * _overload_spaceship(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == strtoflt128(SvPV_nolen(b), NULL)) return newSViv( 0);
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  strtoflt128(SvPV_nolen(b), NULL)) return newSViv(-1);
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  strtoflt128(SvPV_nolen(b), NULL)) return newSViv( 1);
+       char *p;
+       int i = 0;
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == strtoflt128(SvPV_nolen(b), &p)) {
+         for(;;i++) {
+           if(p[i] == 0) break;
+           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+             nnum++;
+             break;
+           }
+         }
+         return newSViv( 0);
+       }
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  strtoflt128(SvPV_nolen(b), &p)) {
+         for(;;i++) {
+           if(p[i] == 0) break;
+           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+             nnum++;
+             break;
+           }
+         }
+         return newSViv(-1);
+       }
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  strtoflt128(SvPV_nolen(b), &p)) {
+         for(;;i++) {
+           if(p[i] == 0) break;
+           if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+             nnum++;
+             break;
+           }
+         }
+         return newSViv( 1);
+       }
        return &PL_sv_undef; /* it's a nan */
     }
 
@@ -1174,10 +1375,18 @@ SV * _overload_atan2(pTHX_ SV * a, SV * b, SV * third) {
      }
 
      if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
+       char * p;
+       int i = 0;
        if(third == &PL_sv_yes)
-            *f = atan2q(strtoflt128(SvPV_nolen(b), NULL), *(INT2PTR(float128 *, SvIV(SvRV(a)))));
-       else *f = atan2q(*(INT2PTR(float128 *, SvIV(SvRV(a)))), strtoflt128(SvPV_nolen(b), NULL));
+            *f = atan2q(strtoflt128(SvPV_nolen(b), &p), *(INT2PTR(float128 *, SvIV(SvRV(a)))));
+       else *f = atan2q(*(INT2PTR(float128 *, SvIV(SvRV(a)))), strtoflt128(SvPV_nolen(b), &p));
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
        return obj_ref;
      }
 
@@ -1245,10 +1454,18 @@ SV * _overload_pow(pTHX_ SV * a, SV * b, SV * third) {
      }
 
      if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
+       char * p;
+       int i = 0;
        if(third == &PL_sv_yes)
-            *f = powq(strtoflt128(SvPV_nolen(b), NULL), *(INT2PTR(float128 *, SvIV(SvRV(a)))));
-       else *f = powq(*(INT2PTR(float128 *, SvIV(SvRV(a)))), strtoflt128(SvPV_nolen(b), NULL));
+            *f = powq(strtoflt128(SvPV_nolen(b), &p), *(INT2PTR(float128 *, SvIV(SvRV(a)))));
+       else *f = powq(*(INT2PTR(float128 *, SvIV(SvRV(a)))), strtoflt128(SvPV_nolen(b), &p));
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
        return obj_ref;
      }
 
@@ -1286,10 +1503,18 @@ SV * _overload_pow_eq(pTHX_ SV * a, SV * b, SV * third) {
     }
 
     if(SvPOK(b)) {
-       if(!looks_like_number(b)) nnum++;
+       char * p;
+       int i = 0;
        *(INT2PTR(float128 *, SvIV(SvRV(a)))) = powq(*(INT2PTR(float128 *, SvIV(SvRV(a)))),
-                                                    strtoflt128(SvPV_nolen(b), NULL));
-        return a;
+                                                    strtoflt128(SvPV_nolen(b), &p));
+       for(;;i++) {
+         if(p[i] == 0) break;
+         if(p[i] != ' ' && p[i] != '\t' && p[i] != '\n' && p[i] != '\r' && p[i] != '\f') {
+           nnum++;
+           break;
+         }
+       }
+       return a;
     }
 
     if(sv_isobject(b)) {
