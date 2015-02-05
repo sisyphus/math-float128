@@ -44,25 +44,29 @@ else {
 
 $rop = Math::Float128->new('0xb');
 
-if($rop == 11 && nnf() == 2) {print "ok 5\n"}
+if(($rop == 11 && nnf() == 1)
+           ||
+   ($rop == 0  && nnf() == 2)) {print "ok 5\n"}
 else {
-  warn "\nExpected 11, got $rop\n";
-  warn "nnumflag() expected 2, got ", nnf(), "\n";
+  warn "\n\$rop: $rop\n";
+  warn "nnumflag(): ", nnf(), "\n";
   print "not ok 5\n";
 }
 
 $rop = Math::Float128->new('0XB');
 
-if($rop == 11 && nnf() == 3) {print "ok 6\n"}
+if(($rop == 11 && nnf() == 1)
+           ||
+   ($rop == 0  && nnf() == 2)) {print "ok 6\n"}
 else {
-  warn "\nExpected 11, got $rop\n";
-  warn "nnumflag() expected 3, got ", nnf(), "\n";
+  warn "\n\$rop: $rop\n";
+  warn "nnumflag(): ", nnf(), "\n";
   print "not ok 6\n";
 }
 
 $rop = Math::Float128->new('011');
 
-if($rop == 11 && nnf() == 3) {print "ok 7\n"}
+if($rop == 11 && nnf() == 1) {print "ok 7\n"}
 else {
   warn "\nExpected 11, got $rop\n";
   warn "nnumflag() expected 3, got ", nnf(), "\n";
