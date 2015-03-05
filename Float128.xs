@@ -65,22 +65,40 @@ int  _is_inf(float128 x) {
      return 0; /* Finite Real */
 }
 
-int  _is_zero(float128 x) {
-     char * buffer;
+/* Replaced */
+/*
+//int  _is_zero(float128 x) {
+//     char * buffer;
+//
+//     if(x != 0.0Q) return 0;
+//
+//     Newx(buffer, 2, char);
+//
+//     quadmath_snprintf(buffer, sizeof buffer, "%.0Qf", x);
+//
+//     if(!strcmp(buffer, "-0")) {
+//       Safefree(buffer);
+//       return -1;
+//     }
+//
+//     Safefree(buffer);
+//     return 1;
+//}
+*/
 
-     if(x != 0.0Q) return 0;
+int _is_zero(float128 x) {
 
-     Newx(buffer, 2, char);
+  int n = sizeof(float128);
+  void * p = &x;
 
-     quadmath_snprintf(buffer, sizeof buffer, "%.0Qf", x);
+  if(x != 0.0Q) return 0;
 
-     if(!strcmp(buffer, "-0")) {
-       Safefree(buffer);
-       return -1;
-     }
-
-     Safefree(buffer);
-     return 1;
+#ifdef WE_HAVE_BENDIAN /* Big Endian architecture */
+  if(((unsigned char*)p)[0] >= 128) return -1;
+#else
+  if(((unsigned char*)p)[n - 1] >= 128) return -1;
+#endif
+  return 1;
 }
 
 float128 _get_inf(int sign) {
