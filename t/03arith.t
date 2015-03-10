@@ -1,8 +1,18 @@
 use warnings;
 use strict;
 use Math::Float128 qw(:all);
+use Config;
 
 print "1..20\n";
+
+# Check for mingw64 gcc-4.9.2 bug that casts long double inf to __float128 nan.
+
+my $nv = 99**99**99**99;
+my $bugtest = NVtoF128($nv);
+
+if($nv == $nv && ($nv - $nv) != ($nv - $nv) && is_NaNF128($bugtest)) {
+  warn "\nIgnoring compiler bug that has cast $Config{nvtype} inf to __float128 nan\n";
+}
 
 # Try to determine when the decimal point is a comma,
 # and set $dp accordingly.
