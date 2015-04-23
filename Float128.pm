@@ -233,6 +233,8 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
    are passed to strtoflt128() and checked for the presence of non-numeric
    characters. If any such non-numeric characters are detected, then the
    global non-numeric flag (which is initially set to 0) will be incremented.
+   Neither leading nor trailing whitespace is deemed non-numeric, but any
+   other (ie internal) whitespace *is* regarded as non-numeric.
    You can query the value held by the global non-numeric flag by running
    Math::Float128::nnumflag() and you can manually alter the value of this
    global using Math::Float128::set_nnum and Math::Float128::clear_nnum.
@@ -761,7 +763,7 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
 
    This program is free software; you may redistribute it and/or modify
    it under the same terms as Perl itself.
-   Copyright 2013-14 Sisyphus
+   Copyright 2013-15 Sisyphus
 
 
 =head1 AUTHOR
