@@ -1159,7 +1159,7 @@ SV * _overload_exp(pTHX_ SV * a, SV * b, SV * third) {
      Newx(f, 1, float128);
      if(f == NULL) croak("Failed to allocate memory in _overload_exp function");
 
-#ifdef __MINGW64_VERSION_MAJOR /* avoid calling expq() as it's buggy */
+#if defined(__MINGW64_VERSION_MAJOR) && __MINGW64_VERSION_MAJOR < 4  /* avoid calling expq() as it's buggy */
      *f = powq(M_Eq, *(INT2PTR(float128 *, SvIV(SvRV(a)))));
 #else
      *f = expq(*(INT2PTR(float128 *, SvIV(SvRV(a)))));
@@ -1902,7 +1902,7 @@ void copysign_F128(float128 * rop, float128 * op1, float128 * op2) {
 }
 
 void cosh_F128(float128 * rop, float128 * op) {
-#ifdef __MINGW64_VERSION_MAJOR /* avoid calling coshq() as it's buggy */
+#if defined(__MINGW64_VERSION_MAJOR) && __MINGW64_VERSION_MAJOR < 4 /* avoid calling coshq() as it's buggy */
   float128 temp = sinhq(*op);
   temp = powq(temp, 2) + 1.0Q;
   *rop = sqrtq(temp);
@@ -1924,7 +1924,7 @@ void erfc_F128(float128 * rop, float128 * op) {
 }
 
 void exp_F128(float128 * rop, float128 * op) {
-#ifdef __MINGW64_VERSION_MAJOR /* avoid calling expq() as it's buggy */
+#if defined(__MINGW64_VERSION_MAJOR) && __MINGW64_VERSION_MAJOR < 4 /* avoid calling expq() as it's buggy */
   *rop = powq(M_Eq, *op);
 #else
   *rop = expq(*op);
@@ -1952,7 +1952,7 @@ void floor_F128(float128 * rop, float128 * op) {
 }
 
 void fma_F128(float128 * rop, float128 * op1, float128 * op2, float128 * op3) {
-#ifdef __MINGW64_VERSION_MAJOR /* avoid calling fmaq() as it's buggy */
+#if defined(__MINGW64_VERSION_MAJOR) && __MINGW64_VERSION_MAJOR < 4 /* avoid calling fmaq() as it's buggy */
   float128 temp = *op1 * *op2;
   temp += *op3;
   *rop = temp;
@@ -2076,7 +2076,7 @@ void nan_F128(pTHX_ float128 * rop, SV * op) {
 }
 
 void nearbyint_F128(float128 * rop, float128 * op) {
-#ifdef __MINGW64_VERSION_MAJOR /* avoid calling nearbyintq() as it's buggy */
+#if defined(__MINGW64_VERSION_MAJOR) && __MINGW64_VERSION_MAJOR < 4 /* avoid calling nearbyintq() as it's buggy */
   float128 do_floor, do_ceil;
   int rnd = fegetround();
   if(*op == 0.0Q || isinfq(*op) || isnanq(*op)) {
@@ -2185,7 +2185,7 @@ void tanh_F128(float128 * rop, float128 * op) {
 }
 
 void tgamma_F128(float128 * rop, float128 * op) {
-#ifdef __MINGW64_VERSION_MAJOR /* avoid calling tgammaq() as it's buggy */
+#if defined(__MINGW64_VERSION_MAJOR) && __MINGW64_VERSION_MAJOR < 4 /* avoid calling tgammaq() as it's buggy */
   *rop = powq(M_Eq, lgammaq(*op));
 #else
   *rop = tgammaq(*op);
