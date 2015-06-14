@@ -1,4 +1,6 @@
 0.08
+ - In t/11stringification.t add a test to check that F128toSTR is, in fact, not
+   outputting insane values.
 
 0.07
  - Allow for MinGW64-v4 (runtime) bugfixes in Float128.xs.
