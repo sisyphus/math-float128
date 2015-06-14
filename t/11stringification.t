@@ -4,12 +4,13 @@ use warnings;
 use strict;
 use Math::Float128 qw(:all);
 
-print "1..6\n";
+print "1..7\n";
 
 my $pnan = F128toNV(NaNF128());
 my $ninf = F128toNV(InfF128(-1));
 my $pinf = F128toNV(InfF128(1));
 my $negzero = F128toNV(ZeroF128(-1));
+my $ap_tester = Math::Float128->new('1.68');
 
 # Try to determine when the decimal point is a comma,
 # and set $dp accordingly.
@@ -89,5 +90,13 @@ if(Math::Float128::_overload_string(NaNF128()) eq 'NaN') {print "ok 6\n"}
 else {
   warn "\nNaNF128(): ", NaNF128(), "\n";
   print "not ok 6\n";
+}
+
+my $returned_string = F128toSTR($ap_tester);
+
+if($returned_string =~ /1\.6/) {print "ok 7\n"}
+else {
+  warn "\nExpected something matching /1.6/\nGot $returned_string\n";
+  print "not ok 7\n";
 }
 
