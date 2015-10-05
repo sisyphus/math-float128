@@ -33,7 +33,9 @@ int _DIGITS = FLT128_DIG;
 int _DIGITS = 33;
 #endif
 
-#ifdef __MINGW64__
+#if defined(__MINGW32__) && !defined(__MINGW64__)
+typedef __float128 float128 __attribute__ ((aligned(32)));
+#elif defined(__MINGW64__)
 typedef __float128 float128 __attribute__ ((aligned(8)));
 #else
 typedef __float128 float128;
