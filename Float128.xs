@@ -27,11 +27,7 @@
 #  define Newx(v,n,t) New(0,v,n,t)
 #endif
 
-#ifdef FLT128_DIG
-int _DIGITS = FLT128_DIG;
-#else
-int _DIGITS = 33;
-#endif
+int _DIGITS = 36;
 
 #if defined(__MINGW32__) && !defined(__MINGW64__)
 typedef __float128 float128 __attribute__ ((aligned(32)));
