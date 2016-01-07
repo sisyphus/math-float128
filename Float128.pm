@@ -450,7 +450,7 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
      The returned string will contain the same as is displayed by
      "print $f", except that print() will strip the trailing zeroes
      in the mantissa (significand) whereas F128toSTR won't.
-     By default, provides 33 decimal digits of precision. This can be
+     By default, provides 36 decimal digits of precision. This can be
      altered by specifying the desired precision (in decimal digits)
      in a call to flt128_set_prec.
 
@@ -461,7 +461,8 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
     $nv = F128toNV($f);
      This function returns the value of the Math::Float128 object to
      a perl scalar (NV). It may not translate the value accurately,
-     depending, of course, upon the value that the object holds.
+     depending, of course, upon both the value that the object holds
+     and the precision of the NV's mantissa.
 
 
 =head1 MATH LIBRARY FUNCTIONS
