@@ -1,4 +1,6 @@
 0.09
+ - Change default ouptut precision to 36 - which brings it into line with the mpfr
+   library.
 
 0.08
  - In t/11stringification.t add a test to check that F128toSTR is, in fact, not
