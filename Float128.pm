@@ -764,7 +764,7 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
 
    This program is free software; you may redistribute it and/or modify
    it under the same terms as Perl itself.
-   Copyright 2013-15 Sisyphus
+   Copyright 2013-16 Sisyphus
 
 
 =head1 AUTHOR
