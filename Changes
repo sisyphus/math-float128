@@ -1,3 +1,5 @@
+0.10
+
 0.09
  - Change default ouptut precision to 36 - which brings it into line with the mpfr
    library.
