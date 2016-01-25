@@ -821,28 +821,49 @@ SV * _overload_div_eq(pTHX_ SV * a, SV * b, SV * third) {
 SV * _overload_lt(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvUOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < (float128)SvUV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > (float128)SvUV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < (float128)SvUV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvIOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < (float128)SvIV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > (float128)SvIV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < (float128)SvIV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvNOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < (float128)SvNV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > (float128)SvNV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < (float128)SvNV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvPOK(b)) {
-       char * p;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < strtoflt128(SvPV_nolen(b), &p)) {
-         _nnum_inc(p);
-         return newSViv(1);
-       }
-       _nnum_inc(p);
-       return newSViv(0);
+      char * p;
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > strtoflt128(SvPV_nolen(b), &p)) {
+          _nnum_inc(p);
+          return newSViv(1);
+        }
+        _nnum_inc(p);
+        return newSViv(0);
+      }
+
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < strtoflt128(SvPV_nolen(b), &p)) {
+        _nnum_inc(p);
+        return newSViv(1);
+      }
+      _nnum_inc(p);
+      return newSViv(0);
     }
 
     if(sv_isobject(b)) {
@@ -859,28 +880,49 @@ SV * _overload_lt(pTHX_ SV * a, SV * b, SV * third) {
 SV * _overload_gt(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvUOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > (float128)SvUV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < (float128)SvUV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > (float128)SvUV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvIOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > (float128)SvIV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < (float128)SvIV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > (float128)SvIV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvNOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > (float128)SvNV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < (float128)SvNV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > (float128)SvNV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvPOK(b)) {
-       char * p;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > strtoflt128(SvPV_nolen(b), &p)) {
-         _nnum_inc(p);
-         return newSViv(1);
-       }
-       _nnum_inc(p);
-       return newSViv(0);
+      char * p;
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) < strtoflt128(SvPV_nolen(b), &p)) {
+          _nnum_inc(p);
+          return newSViv(1);
+        }
+        _nnum_inc(p);
+        return newSViv(0);
+      }
+
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) > strtoflt128(SvPV_nolen(b), &p)) {
+        _nnum_inc(p);
+        return newSViv(1);
+      }
+      _nnum_inc(p);
+      return newSViv(0);
     }
 
     if(sv_isobject(b)) {
@@ -897,28 +939,48 @@ SV * _overload_gt(pTHX_ SV * a, SV * b, SV * third) {
 SV * _overload_lte(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvUOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= (float128)SvUV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= (float128)SvUV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= (float128)SvUV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvIOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= (float128)SvIV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= (float128)SvIV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= (float128)SvIV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvNOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= (float128)SvNV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= (float128)SvNV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= (float128)SvNV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvPOK(b)) {
-       char * p;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= strtoflt128(SvPV_nolen(b), &p)) {
-         _nnum_inc(p);
-         return newSViv(1);
-       }
-       _nnum_inc(p);
-       return newSViv(0);
+      char * p;
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= strtoflt128(SvPV_nolen(b), &p)) {
+          _nnum_inc(p);
+          return newSViv(1);
+        }
+        _nnum_inc(p);
+        return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= strtoflt128(SvPV_nolen(b), &p)) {
+        _nnum_inc(p);
+        return newSViv(1);
+      }
+      _nnum_inc(p);
+      return newSViv(0);
     }
 
     if(sv_isobject(b)) {
@@ -935,61 +997,84 @@ SV * _overload_lte(pTHX_ SV * a, SV * b, SV * third) {
 SV * _overload_gte(pTHX_ SV * a, SV * b, SV * third) {
 
     if(SvUOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= (float128)SvUV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= (float128)SvUV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= (float128)SvUV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvIOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= (float128)SvIV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= (float128)SvIV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= (float128)SvIV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvNOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= (float128)SvNV(b)) return newSViv(1);
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= (float128)SvNV(b)) return newSViv(1);
         return newSViv(0);
+      }
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= (float128)SvNV(b)) return newSViv(1);
+      return newSViv(0);
     }
 
     if(SvPOK(b)) {
-       char * p;
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= strtoflt128(SvPV_nolen(b), &p)) {
-         _nnum_inc(p);
-         return newSViv(1);
-       }
-       _nnum_inc(p);
-       return newSViv(0);
+      char * p;
+      if(third == &PL_sv_yes) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <= strtoflt128(SvPV_nolen(b), &p)) {
+          _nnum_inc(p);
+          return newSViv(1);
+        }
+        _nnum_inc(p);
+        return newSViv(0);
+      }
+
+      if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= strtoflt128(SvPV_nolen(b), &p)) {
+        _nnum_inc(p);
+        return newSViv(1);
+      }
+      _nnum_inc(p);
+      return newSViv(0);
     }
 
-     if(sv_isobject(b)) {
-       const char *h = HvNAME(SvSTASH(SvRV(b)));
-       if(strEQ(h, "Math::Float128")) {
-         if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= *(INT2PTR(float128 *, SvIV(SvRV(b))))) return newSViv(1);
-         return newSViv(0);
-       }
-       croak("Invalid object supplied to Math::Float128::_overload_gte function");
-     }
-     croak("Invalid argument supplied to Math::Float128::_overload_gte function");
+    if(sv_isobject(b)) {
+      const char *h = HvNAME(SvSTASH(SvRV(b)));
+      if(strEQ(h, "Math::Float128")) {
+        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >= *(INT2PTR(float128 *, SvIV(SvRV(b))))) return newSViv(1);
+        return newSViv(0);
+      }
+      croak("Invalid object supplied to Math::Float128::_overload_gte function");
+    }
+    croak("Invalid argument supplied to Math::Float128::_overload_gte function");
 }
 
 SV * _overload_spaceship(pTHX_ SV * a, SV * b, SV * third) {
+    int reversal = 1;
+    if(third == &PL_sv_yes) reversal = -1;
 
     if(SvUOK(b)) {
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == (float128)SvUV(b)) return newSViv( 0);
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  (float128)SvUV(b)) return newSViv(-1);
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  (float128)SvUV(b)) return newSViv( 1);
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == (float128)SvUV(b)) return newSViv( 0 * reversal);
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  (float128)SvUV(b)) return newSViv(-1 * reversal);
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  (float128)SvUV(b)) return newSViv( 1 * reversal);
        return &PL_sv_undef; /* it's a nan */
     }
 
     if(SvIOK(b)) {
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == (float128)SvIV(b)) return newSViv( 0);
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  (float128)SvIV(b)) return newSViv(-1);
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  (float128)SvIV(b)) return newSViv( 1);
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  (float128)SvIV(b)) return newSViv(-1 * reversal);
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  (float128)SvIV(b)) return newSViv( 1 * reversal);
        return &PL_sv_undef; /* it's a nan */
     }
 
     if(SvNOK(b)) {
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) == (float128)SvNV(b)) return newSViv( 0);
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  (float128)SvNV(b)) return newSViv(-1);
-       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  (float128)SvNV(b)) return newSViv( 1);
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  (float128)SvNV(b)) return newSViv(-1 * reversal);
+       if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  (float128)SvNV(b)) return newSViv( 1 * reversal);
        return &PL_sv_undef; /* it's a nan */
     }
 
@@ -1001,11 +1086,11 @@ SV * _overload_spaceship(pTHX_ SV * a, SV * b, SV * third) {
        }
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) <  strtoflt128(SvPV_nolen(b), &p)) {
          _nnum_inc(p);
-         return newSViv(-1);
+         return newSViv(-1 * reversal);
        }
        if(*(INT2PTR(float128 *, SvIV(SvRV(a)))) >  strtoflt128(SvPV_nolen(b), &p)) {
          _nnum_inc(p);
-         return newSViv( 1);
+         return newSViv( 1 * reversal);
        }
        return &PL_sv_undef; /* it's a nan */
     }
