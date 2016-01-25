@@ -1,4 +1,5 @@
 0.10
+ - Fix overloading of comparison operators (for when operands are reversed).
 
 0.09
  - Change default ouptut precision to 36 - which brings it into line with the mpfr
