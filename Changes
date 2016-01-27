@@ -1,3 +1,5 @@
+0.11
+
 0.10
  - Fix overloading of comparison operators (for when operands are reversed).
 
