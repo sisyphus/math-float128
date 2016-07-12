@@ -1,5 +1,5 @@
 0.11
- - Replace SvUV/SvIV/SvNV with SvUVX/SvIVX/SvNVX where appropriate.
+ - Replace SvUV/SvIV/SvNV with SvUVX/SvIVX/SvNVX where appropriate. (In typemap, too.)
 
 0.10
  - Fix overloading of comparison operators (for when operands are reversed).
