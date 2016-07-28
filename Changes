@@ -1,5 +1,7 @@
 0.11
  - Replace SvUV/SvIV/SvNV with SvUVX/SvIVX/SvNVX where appropriate. (In typemap, too.)
+ - Add code to Makefile.PL to ensure that '-lquadmath' doesn't get stripped
+   (Thanks to kent frederic.)
 
 0.10
  - Fix overloading of comparison operators (for when operands are reversed).
