@@ -1,4 +1,5 @@
 use ExtUtils::MakeMaker;
+use ExtUtils::Liblist qw();
 use Config;
 
 # Attempt to avoid the incorrect 'FAIL' reports from Chris Williams' broken NetBSD smoker(s).
@@ -41,6 +42,32 @@ $defines .= " -DLONGLONG2IV_IS_OK"
 
 $defines .= " -DLONG2IV_IS_OK"
   if $Config{ivsize} >= $Config{longsize};
+
+# Default version of Liblist strips -l params it can't find
+# in lib-path, which strips -l params that might be "compiler provided"
+# https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/277
+# https://rt.cpan.org/Ticket/Display.html?id=116520
+#
+# This simply assumes any such stripping is wrong and optimisitically reinserts them.
+if ( defined &ExtUtils::Liblist::ext ) {
+  warn "Patching ExtUtils::Liblist::ext\n";
+  my $orig = \&ExtUtils::Liblist::ext;
+  no warnings 'redefine';
+  *ExtUtils::Liblist::ext = sub {
+      my ( @result ) = $orig->(@_);
+      # Always make sure -lm is there as we anchor in front of -lm
+      if ( $result[2] !~ /-lm/ ) {
+        warn "Reinserting stripped -lm\n";
+        $result[2] .= ' -lm';
+      }
+      # Then insert -lquadmath in front of any such -lm
+      if ( $result[2] !~ /-lquadmath/ ) {
+        warn "Reinsterting stripped -lquadmath\n";
+        $result[2] =~ s{-lm}{-lquadmath -lm};
+      }
+      return @result;
+  };
+}
 
 my %options = %{
 {
