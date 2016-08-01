@@ -62,7 +62,7 @@ if ( defined &ExtUtils::Liblist::ext ) {
       }
       # Then insert -lquadmath in front of any such -lm
       if ( $result[2] !~ /-lquadmath/ ) {
-        warn "Reinsterting stripped -lquadmath\n";
+        warn "Reinserting stripped -lquadmath\n";
         $result[2] =~ s{-lm}{-lquadmath -lm};
       }
       return @result;
