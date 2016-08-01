@@ -1,5 +1,5 @@
 0.12
-
+ - Fix typo ("Reinsterting") in Makefile.PL
 
 0.11
  - Replace SvUV/SvIV/SvNV with SvUVX/SvIVX/SvNVX where appropriate. (In typemap, too.)
