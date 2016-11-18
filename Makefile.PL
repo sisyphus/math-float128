@@ -43,6 +43,9 @@ $defines .= " -DLONGLONG2IV_IS_OK"
 $defines .= " -DLONG2IV_IS_OK"
   if $Config{ivsize} >= $Config{longsize};
 
+$defines .= " NV_IS_DOUBLE"
+  if $Config{nvtype} eq 'double';
+
 # Default version of Liblist strips -l params it can't find
 # in lib-path, which strips -l params that might be "compiler provided"
 # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/277
