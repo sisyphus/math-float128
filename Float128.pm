@@ -89,6 +89,9 @@ DynaLoader::bootstrap Math::Float128 $Math::Float128::VERSION;
     tanh_F128 tgamma_F128 trunc_F128 y0_F128 y1_F128 yn_F128
     )]);
 
+$Math::Float128::NOK_POK = 0; # Set to 1 to allow warnings in new() and overloaded operations when
+                              # a scalar that has set both NOK (NV) and POK (PV) flags is encountered
+
 sub dl_load_flags {0} # Prevent DynaLoader from complaining and croaking
 
 sub _overload_string {
@@ -275,12 +278,12 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
        value is used. The variable is considered to be an IV if the
        IOK flag is set.
 
-    3. If the variable is an NV (floating point value) then that
+    3. If the variable is a string (ie the POK flag is set) then the
+       value of that string is used.
+
+    4. If the variable is an NV (floating point value) then that
        value is used. The variable is considered to be an NV if the
        NOK flag is set.
-
-    4. If the variable is a string (ie the POK flag is set) then the
-       value of that string is used.
 
     5. If the variable is a Math::Float128 object then the value
        encapsulated in that object is used.
@@ -748,6 +751,22 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
     $hex = f128_bytes($f);
      Returns the hex representation of the _float128 value
      as a string of 32 hex characters.
+
+   $iv = Math::Float128::nok_pokflag(); # not exported
+    Returns the value of the nok_pok flag. This flag is
+    initialized to zero, but incemented by 1 whenever a
+    scalar that is both a float (NOK) and string (POK) is passed
+    to new() or to an overloaded operator. The value of the flag
+    therefore tells us how many times such events occurred . The
+    flag can be reset to 0 by running clear_nok_pok().
+
+
+   Math::Float128::set_nok_pok($iv); # not exported
+    Resets the nok_pok flag to the value specified by $iv.
+
+   Math::Float128::clear_nok_pok(); # not exported
+    Resets the nok_pok flag to 0.(Essentially the same
+    as running set_nok_pok(0).)
 
 
 =head1 BUGS
