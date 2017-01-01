@@ -72,6 +72,10 @@ if ( defined &ExtUtils::Liblist::ext ) {
   };
 }
 
+if($^O =~ /MSWin32/i && $] < 5.022) {
+  $defines .= " -D_WIN32_BIZARRE_INFNAN";
+}
+
 my %options = %{
 {
   NAME => 'Math::Float128',
