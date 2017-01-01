@@ -4,6 +4,7 @@ Changes
 Float128.pm
 Float128.xs
 Makefile.PL
+math_float128_include.h
 quad.in
 typemap
 t/01load.t
@@ -12,6 +13,7 @@ t/03arith.t
 t/04bool.t
 t/05cmp.t
 t/06inc_dec.t
+t/infnan_overloading.t
 t/07int.t
 t/08log_exp.t
 t/09new.t
