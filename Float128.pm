@@ -147,6 +147,16 @@ sub new {
     return UVtoF128 ($arg) if $type == 1; #UV
     return IVtoF128 ($arg) if $type == 2; #IV
 
+    if($type == 4) { #PV
+      if(_SvNOK($arg)) {
+        set_nok_pok(nok_pokflag() + 1);
+        if($Math::MPFR::NOK_POK) {
+          warn "Scalar passed to new() is both NV and PV. Using PV (string) value";
+        }
+      }
+      return STRtoF128($arg);
+    }
+
     if($type == 3) {                      # NV
       if($arg == 0) {return NVtoF128($arg)}
       if($arg != $arg) { return NaNF128()}
@@ -156,8 +166,6 @@ sub new {
       }
       return NVtoF128($arg);
     }
-
-    return STRtoF128($arg) if $type == 4; #PV
 
     if($type == 113) { # Math::Float128
       return F128toF128($arg);
@@ -783,7 +791,7 @@ Math::Float128 - perl interface to C's (quadmath) __float128 operations
 
    This program is free software; you may redistribute it and/or modify
    it under the same terms as Perl itself.
-   Copyright 2013-16 Sisyphus
+   Copyright 2013-17 Sisyphus
 
 
 =head1 AUTHOR
