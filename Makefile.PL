@@ -46,6 +46,16 @@ $defines .= " -DLONG2IV_IS_OK"
 $defines .= " -DNV_IS_DOUBLE"
   if $Config{nvtype} eq 'double';
 
+if($Config{nvtype} eq 'long double') {
+  $defines .= " -DNV_IS_LONG_DOUBLE";
+  if(defined($Config{longdblkind})) {
+    if($Config{longdblkind} != 3 && $Config{longdblkind} != 4) {
+      $defines .= " -DINF_CAST_BUG_ABSENT";
+    }
+  }
+}
+
+
 # Default version of Liblist strips -l params it can't find
 # in lib-path, which strips -l params that might be "compiler provided"
 # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/277
