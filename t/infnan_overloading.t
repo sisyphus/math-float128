@@ -8,6 +8,13 @@ use Math::Float128 qw(:all);
 
 print "1..119\n";
 
+if(Math::Float128::_avoid_inf_cast()) {
+ warn "\nFYI: AVOID_INF_CAST is DEFINED\n";
+}
+else {
+ warn "\nFYI: AVOID_INF_CAST is NOT DEFINED\n";
+}
+
 my $inf  = 999 ** (999 ** 999);
 my $ninf = $inf * -1;
 my $nan  = $inf / $inf;
