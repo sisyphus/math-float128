@@ -119,7 +119,7 @@ int _is_zero(float128 x) {
 
 float128 _get_inf(int sign) {
     float128 ret;
-    ret = 1.0Q / 0.0Q;
+    ret = FLT128_MAX * 2.0Q;
     if(sign < 0) ret *= -1.0Q;
     return ret;
 }
@@ -242,9 +242,7 @@ SV * STRtoF128(pTHX_ SV * str) {
      float128 * f;
      SV * obj_ref, * obj;
      char * p;
-#ifdef _WIN32_BIZARRE_INFNAN
-     int inf_or_nan = _win32_infnanstring(SvPV_nolen(str));
-#endif
+     int inf_or_nan = 0;
 
      Newx(f, 1, float128);
      if(f == NULL) croak("Failed to allocate memory in STRtoF128 function");
@@ -253,6 +251,7 @@ SV * STRtoF128(pTHX_ SV * str) {
      obj = newSVrv(obj_ref, "Math::Float128");
 
 #ifdef _WIN32_BIZARRE_INFNAN
+     inf_or_nan = _win32_infnanstring(SvPV_nolen(str));
      if(inf_or_nan) {
        if(inf_or_nan == 2) *f = _get_nan();
        else *f = _get_inf(inf_or_nan);
@@ -262,7 +261,7 @@ SV * STRtoF128(pTHX_ SV * str) {
      *f = strtoflt128(SvPV_nolen(str), &p);
 #endif
 
-     _nnum_inc(p);
+     if(!inf_or_nan) _nnum_inc(p);
 
      sv_setiv(obj, INT2PTR(IV,f));
      SvREADONLY_on(obj);
