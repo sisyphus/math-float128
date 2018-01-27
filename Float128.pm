@@ -180,29 +180,29 @@ sub f128_bytes {
   return join '', @ret;
 }
 
-sub FLT128_DIG        {return _FLT128_DIG()}
-sub FLT128_MAX        {return _FLT128_MAX()}
-sub FLT128_MIN        {return _FLT128_MIN()}
-sub FLT128_EPSILON    {return _FLT128_EPSILON()}
-sub FLT128_DENORM_MIN {return _FLT128_DENORM_MIN()}
-sub FLT128_MANT_DIG   {return _FLT128_MANT_DIG()}
-sub FLT128_MIN_EXP    {return _FLT128_MIN_EXP()}
-sub FLT128_MAX_EXP    {return _FLT128_MAX_EXP()}
-sub FLT128_MIN_10_EXP {return _FLT128_MIN_10_EXP()}
-sub FLT128_MAX_10_EXP {return _FLT128_MAX_10_EXP()}
-sub M_Eq              {return _M_Eq()}
-sub M_LOG2Eq          {return _M_LOG2Eq()}
-sub M_LOG10Eq         {return _M_LOG10Eq()}
-sub M_LN2q            {return _M_LN2q()}
-sub M_LN10q           {return _M_LN10q()}
-sub M_PIq             {return _M_PIq()}
-sub M_PI_2q           {return _M_PI_2q()}
-sub M_PI_4q           {return _M_PI_4q()}
-sub M_1_PIq           {return _M_1_PIq()}
-sub M_2_PIq           {return _M_2_PIq()}
-sub M_2_SQRTPIq       {return _M_2_SQRTPIq()}
-sub M_SQRT2q          {return _M_SQRT2q()}
-sub M_SQRT1_2q        {return _M_SQRT1_2q()}
+sub FLT128_DIG        () {return _FLT128_DIG()}
+sub FLT128_MAX        () {return _FLT128_MAX()}
+sub FLT128_MIN        () {return _FLT128_MIN()}
+sub FLT128_EPSILON    () {return _FLT128_EPSILON()}
+sub FLT128_DENORM_MIN () {return _FLT128_DENORM_MIN()}
+sub FLT128_MANT_DIG   () {return _FLT128_MANT_DIG()}
+sub FLT128_MIN_EXP    () {return _FLT128_MIN_EXP()}
+sub FLT128_MAX_EXP    () {return _FLT128_MAX_EXP()}
+sub FLT128_MIN_10_EXP () {return _FLT128_MIN_10_EXP()}
+sub FLT128_MAX_10_EXP () {return _FLT128_MAX_10_EXP()}
+sub M_Eq              () {return _M_Eq()}
+sub M_LOG2Eq          () {return _M_LOG2Eq()}
+sub M_LOG10Eq         () {return _M_LOG10Eq()}
+sub M_LN2q            () {return _M_LN2q()}
+sub M_LN10q           () {return _M_LN10q()}
+sub M_PIq             () {return _M_PIq()}
+sub M_PI_2q           () {return _M_PI_2q()}
+sub M_PI_4q           () {return _M_PI_4q()}
+sub M_1_PIq           () {return _M_1_PIq()}
+sub M_2_PIq           () {return _M_2_PIq()}
+sub M_2_SQRTPIq       () {return _M_2_SQRTPIq()}
+sub M_SQRT2q          () {return _M_SQRT2q()}
+sub M_SQRT1_2q        () {return _M_SQRT1_2q()}
 
 1;
 
