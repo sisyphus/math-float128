@@ -1,5 +1,7 @@
 0.13
  - Prototype subroutines listed in 'use subs()'.
+ - Move pod from Float128.pm to (newly created) Float128.pod.
+ - Add fromSTR(), fromNV(), fromIV() and fromUV().
 
 0.12
  - Fix typo ("Reinsterting") in Makefile.PL
