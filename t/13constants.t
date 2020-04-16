@@ -10,7 +10,7 @@ my $dp = '.';
 $dp = ',' unless Math::Float128->new('0,5') == Math::Float128->new(0);
 
 my $ret;
-my $eps = ZeroF128(-1);#STRtoF128('1e-33');
+my $eps = STRtoF128('1e-33');
 
 #if(113 == FLT128_MANT_DIG) {print "ok 1\n"}
 
