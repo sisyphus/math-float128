@@ -48,7 +48,7 @@ use subs qw(FLT128_DIG FLT128_MANT_DIG FLT128_MIN_EXP FLT128_MAX_EXP FLT128_MIN_
 
 $Math::Float128::VERSION = '0.14';
 
-DynaLoader::bootstrap Math::Float128 $Math::Float128::VERSION;
+Math::Float128->DynaLoader::bootstrap($Math::Float128::VERSION);
 
 @Math::Float128::EXPORT = ();
 @Math::Float128::EXPORT_OK = qw(
