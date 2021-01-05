@@ -17,13 +17,16 @@
 
 int _DIGITS = 36;
 
-#if defined(__MINGW32__) && !defined(__MINGW64__)
-typedef __float128 float128 __attribute__ ((aligned(32)));
+#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+  /* mingw.org 32-bit compilers only */
+  typedef __float128 float128 __attribute__ ((aligned(32)));
 #elif defined(__MINGW64__) || (defined(DEBUGGING) && defined(NV_IS_DOUBLE))
-typedef __float128 float128 __attribute__ ((aligned(8)));
+  /* mingw-w64 64-bit compilers only */
+  typedef __float128 float128 __attribute__ ((aligned(8)));
 #else
-typedef __float128 float128;
+  typedef __float128 float128;
 #endif
+
 
 /*
 * gcc versions 4.9 through to 7 like to cast 80-bit long double Inf to __float128 NaN
