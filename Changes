@@ -1,4 +1,6 @@
 0.14
+ - tweak the alignment conditions in math_float128_include.h to exclude
+   alignment directives for 32-bit mingw-w64 compilers
 
 0.13
  - Prototype subroutines listed in 'use subs()'.
