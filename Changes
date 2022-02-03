@@ -1,4 +1,6 @@
 0.14
+ - Fix https://github.com/sisyphus/math-decimal64/pull/1 (also aplies to Math::Float128)
+   Thanks to @hiratara
  - tweak the alignment conditions in math_float128_include.h to exclude
    alignment directives for 32-bit mingw-w64 compilers
 
