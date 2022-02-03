@@ -30,3 +30,4 @@ t/14f128_bytes.t
 t/15special.t
 t/16overload.t
 t/17overload_cmp_reversal.t
+t/overload_switch.t
