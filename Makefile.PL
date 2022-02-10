@@ -63,8 +63,9 @@ if($Config{nvtype} eq 'long double') {
 # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/277
 # https://rt.cpan.org/Ticket/Display.html?id=116520
 #
-# This simply assumes any such stripping is wrong and optimisitically reinserts them.
-if ( defined &ExtUtils::Liblist::ext ) {
+# This simply assumes any such stripping is wrong and optimisitically
+# reinserts them -  unless (as of version 0.15) $^O is MSWin32.
+if ( defined(&ExtUtils::Liblist::ext) && $^O !~ /MSWin/ ) {
   warn "Patching ExtUtils::Liblist::ext\n";
   my $orig = \&ExtUtils::Liblist::ext;
   no warnings 'redefine';
