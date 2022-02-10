@@ -1,4 +1,6 @@
 0.15
+ - In the Makefile.PL, do not re-insert stripped '-lm' or '-lquadmath' on
+   Windows as this won't ever achieve the desired result on that OS. (Right ??)
 
 0.14
  - Fix https://github.com/sisyphus/math-decimal64/pull/1 (also aplies to Math::Float128)
