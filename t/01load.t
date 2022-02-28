@@ -1,7 +1,7 @@
 use warnings;
 use strict;
 
-print "1..2\n";
+print "1..3\n";
 
 eval {require Math::Float128;};
 
