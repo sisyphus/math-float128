@@ -45,6 +45,9 @@ use overload
 
 use constant F128_PV_NV_BUG => Math::Float128::Constant::_has_pv_nv_bug();
 
+# Inspired by https://github.com/Perl/perl5/issues/19550:
+use constant ISSUE_19550    => Math::Float128::Constant::_issue_19550();
+
 use subs qw(FLT128_DIG FLT128_MANT_DIG FLT128_MIN_EXP FLT128_MAX_EXP FLT128_MIN_10_EXP FLT128_MAX_10_EXP
             M_Eq M_LOG2Eq M_LOG10Eq M_LN2q M_LN10q M_PIq M_PI_2q M_PI_4q M_1_PIq M_2_PIq
             M_2_SQRTPIq M_SQRT2q M_SQRT1_2q
