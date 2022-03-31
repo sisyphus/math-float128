@@ -152,7 +152,13 @@ sub new {
 
     if(@_ > 1) {die "Too many arguments supplied to new() - expected no more than 1"}
 
-    my $arg = shift;
+    my $arg = shift; # At this point, an infnan might acquire a POK flag - thus
+                     # assigning to $type a value of 4, instead of 3. Such behaviour also
+                     # turns $arg into a PV and NV dualvar. It's a fairly inconsequential
+                     # bug - https://github.com/Perl/perl5/issues/19550.
+                     # I could workaround this by simply not shifting and re-assigning, but
+                     # I'll leave it as it is - otherwise there's nothing to mark that this
+                     # minor issue (which might also show up in user code) ever existed.
     my $type = _itsa($arg);
 
     return UVtoF128 ($arg) if $type == 1; #UV
