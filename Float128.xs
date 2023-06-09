@@ -1843,6 +1843,7 @@ SV * _overload_spaceship(pTHX_ SV * a, SV * b, SV * third) {
     croak("Invalid argument supplied to Math::Float128::_overload_spaceship function");
 }
 
+
 SV * _overload_copy(pTHX_ SV * a, SV * b, SV * third) {
 
      float128 * ld;
@@ -2150,22 +2151,12 @@ SV * _overload_atan2(pTHX_ SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::Float128::_overload_atan2 function");
 }
 
-SV * _overload_inc(pTHX_ SV * a, SV * b, SV * third) {
-
-     SvREFCNT_inc(a);
-
+void _overload_inc(pTHX_ SV * a, SV * b, SV * third) {
      *(INT2PTR(float128 *, SvIVX(SvRV(a)))) += 1.0Q;
-
-     return a;
 }
 
-SV * _overload_dec(pTHX_ SV * a, SV * b, SV * third) {
-
-     SvREFCNT_inc(a);
-
+void _overload_dec(pTHX_ SV * a, SV * b, SV * third) {
      *(INT2PTR(float128 *, SvIVX(SvRV(a)))) -= 1.0Q;
-
-     return a;
 }
 
 SV * _overload_pow(pTHX_ SV * a, SV * b, SV * third) {
@@ -3278,13 +3269,11 @@ int _avoid_inf_cast(void) {
 
 int _has_pv_nv_bug(void) {
 #if defined(F128_PV_NV_BUG)
-     return 1;
+  return 1;
 #else
      return 0;
 #endif
 }
-
-
 
 
 MODULE = Math::Float128  PACKAGE = Math::Float128
@@ -3819,23 +3808,41 @@ CODE:
   RETVAL = _overload_atan2 (aTHX_ a, b, third);
 OUTPUT:  RETVAL
 
-SV *
+void
 _overload_inc (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
-CODE:
-  RETVAL = _overload_inc (aTHX_ a, b, third);
-OUTPUT:  RETVAL
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        _overload_inc(aTHX_ a, b, third);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
 
-SV *
+void
 _overload_dec (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
-CODE:
-  RETVAL = _overload_dec (aTHX_ a, b, third);
-OUTPUT:  RETVAL
+        PREINIT:
+        I32* temp;
+        PPCODE:
+        temp = PL_markstack_ptr++;
+        _overload_dec(aTHX_ a, b, third);
+        if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+          PL_markstack_ptr = temp;
+          XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+        return; /* assume stack size is correct */
 
 SV *
 _overload_pow (a, b, third)
